@@ -51,7 +51,7 @@ EXTRAS_REQUIRE = {
 }
 
 setup(
-    name="search_l3s_aimeta_srv",
+    name="search_l3s_aimeta",
     description=DESCRIPTION,
     long_description=README,
     long_description_content_type="text/markdown",

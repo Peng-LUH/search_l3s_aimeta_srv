@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+setup.py
+src/search_l3s_aimeta/__init__.py
+src/search_l3s_aimeta/config.py
+src/search_l3s_aimeta.egg-info/PKG-INFO
+src/search_l3s_aimeta.egg-info/SOURCES.txt
+src/search_l3s_aimeta.egg-info/dependency_links.txt
+src/search_l3s_aimeta.egg-info/requires.txt
+src/search_l3s_aimeta.egg-info/top_level.txt
+src/search_l3s_aimeta/api/__init__.py
+src/search_l3s_aimeta/api/test/__init__.py
+src/search_l3s_aimeta/api/test/endpoints.py

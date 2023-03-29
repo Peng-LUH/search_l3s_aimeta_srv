@@ -15,6 +15,6 @@ api = Api(api_bp,
           authorizations=authorizations,
           )
 
-# from search_l3s_search_srv.api.simple_search_srv.endpoints import ns_simple_search
-# api.add_namespace(ns_simple_search, path="/simple-search-srv")
+from search_l3s_aimeta.api.test.endpoints import ns_test
+api.add_namespace(ns_test, path="/aimeta-test")
 
