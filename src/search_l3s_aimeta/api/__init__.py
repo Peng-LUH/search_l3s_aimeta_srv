@@ -15,6 +15,6 @@ api = Api(api_bp,
           authorizations=authorizations,
           )
 
-from search_l3s_aimeta.api.test.endpoints import ns_test
+from src.search_l3s_aimeta.api.test.endpoints import ns_test
 api.add_namespace(ns_test, path="/aimeta-test")
 
