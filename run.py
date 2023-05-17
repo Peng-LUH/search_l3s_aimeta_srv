@@ -11,4 +11,3 @@ def shell():
     return {"db": db}
 
 
-print("update")
