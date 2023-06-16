@@ -77,9 +77,8 @@ class Summary(Text_Preprocess,object):
             {"role": "user", "content": input_text}
         ]
 
-        #response_text = self.generate_chat_completion(messages)
-        #response_text = self.preprocess_text(response_text)
-        response_text = "testing"
+        response_text = self.generate_chat_completion(messages)
+        response_text = self.preprocess_text(response_text)
         
 
         return {"SUMMARY":response_text}

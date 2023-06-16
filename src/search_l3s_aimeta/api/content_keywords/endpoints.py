@@ -28,8 +28,7 @@ class GetContentKeywords(Resource):
     def get(self, id):  
             "Retrieve Content Keywords of the Task"
             from search_l3s_aimeta.api.content_keywords.logic import ContentKeywords
- 
-    
+            
             mls_response = ContentKeywords.generate_content_keywords(id)
         
             return mls_response, HTTPStatus.OK
