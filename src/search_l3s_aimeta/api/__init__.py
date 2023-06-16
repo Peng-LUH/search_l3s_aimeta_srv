@@ -13,7 +13,7 @@ authorizations = {"Bearer": {"type": "apiKey", "in": "header", "name": "Authoriz
 
 api = Api(api_bp,
           version="1.0",
-          title="L3S AI-Meta Service for SEARCH",
+          title="L3S AI-Meta Service(AIMS)for SEARCH",
           description="Welcome to the Swagger UI documentation site!",
           doc="/ui",
           authorizations=authorizations,
@@ -30,15 +30,15 @@ from search_l3s_aimeta.api.quiz.endpoints import ns_quiz
 from search_l3s_aimeta.api.title.endpoints import ns_title
 
 
-api.add_namespace(ns_test, path="/aimeta-test")
-api.add_namespace(ns_dataset_generator, path="/aimeta-dataset")
-api.add_namespace(ns_dataset_preprocess, path='/aimeta-text-preprocess')
-api.add_namespace(ns_summary, path='/task-summary')
-api.add_namespace(ns_content_keywords, path='/content-keywords')
-api.add_namespace(ns_context_keywords, path='/context-keywords')
-api.add_namespace(ns_learning_goal, path='/learning-goal')
-api.add_namespace(ns_quiz, path='/quiz')
-api.add_namespace(ns_title, path='/title')
+api.add_namespace(ns_test, path="/aims")
+api.add_namespace(ns_dataset_generator, path="/aims")
+api.add_namespace(ns_dataset_preprocess, path='/aims')
+api.add_namespace(ns_summary, path='/aims')
+api.add_namespace(ns_content_keywords, path='/aims')
+api.add_namespace(ns_context_keywords, path='/aims')
+api.add_namespace(ns_learning_goal, path='/aims')
+api.add_namespace(ns_quiz, path='/aims')
+api.add_namespace(ns_title, path='/aims')
 
 
 
