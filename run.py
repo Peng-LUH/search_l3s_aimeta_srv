@@ -1,5 +1,7 @@
 """Flask CLI/Application entry point."""
 import os
+from flask import jsonify
+
 
 from src.search_l3s_aimeta import create_app, db
 
@@ -11,3 +13,7 @@ def shell():
     return {"db": db}
 
 
+
+
+if __name__=='__main__':
+    app.run()

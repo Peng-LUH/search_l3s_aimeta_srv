@@ -7,3 +7,6 @@ ns_test = Namespace("test", validate=True)
 class AimetaTest(Resource):
     def get(self):
         return {"message": "Success"}
+
+
+

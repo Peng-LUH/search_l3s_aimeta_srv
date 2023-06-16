@@ -6,7 +6,8 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from src.search_l3s_aimeta.config import get_config
+
+from search_l3s_aimeta.config import get_config
 
 cors = CORS()
 db = SQLAlchemy()
@@ -19,7 +20,7 @@ def create_app(config_name):
     app.config.from_object(get_config(config_name))
 
     # to avoid a circular import
-    from src.search_l3s_aimeta.api import api_bp
+    from search_l3s_aimeta.api import api_bp
     
     app.register_blueprint(api_bp)
     cors.init_app(app)
