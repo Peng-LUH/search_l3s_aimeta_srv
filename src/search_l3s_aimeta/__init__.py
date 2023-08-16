@@ -28,3 +28,5 @@ def create_app(config_name):
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     return app
+
+

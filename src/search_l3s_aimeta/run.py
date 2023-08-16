@@ -19,3 +19,9 @@ def shell():
 
 if __name__=='__main__':
     app.run()
+
+
+ # cd search/aims/search_l3s_aimeta_srv/src/search_l3s_aimeta
+ # python3 run.py   
+
+ # http://127.0.0.1:5000/api/v1/ui

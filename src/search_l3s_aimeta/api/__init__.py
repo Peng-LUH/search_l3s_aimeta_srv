@@ -13,7 +13,7 @@ authorizations = {"Bearer": {"type": "apiKey", "in": "header", "name": "Authoriz
 
 api = Api(api_bp,
           version="1.0",
-          title="L3S AI-Meta Service(AIMS)for SEARCH",
+          title="L3S AI-Meta Service(AIMS) for SEARCH",
           description="Welcome to the Swagger UI documentation site!",
           doc="/ui",
           authorizations=authorizations,
@@ -28,6 +28,7 @@ from search_l3s_aimeta.api.context_keywords.endpoints import ns_context_keywords
 from search_l3s_aimeta.api.learning_goal.endpoints import ns_learning_goal
 from search_l3s_aimeta.api.quiz.endpoints import ns_quiz
 from search_l3s_aimeta.api.title.endpoints import ns_title
+from search_l3s_aimeta.api.trends.endpoints import ns_trends
 
 
 api.add_namespace(ns_test, path="/aims")
@@ -39,6 +40,7 @@ api.add_namespace(ns_context_keywords, path='/aims')
 api.add_namespace(ns_learning_goal, path='/aims')
 api.add_namespace(ns_quiz, path='/aims')
 api.add_namespace(ns_title, path='/aims')
+api.add_namespace(ns_trends, path='/aims')
 
 
 
