@@ -7,3 +7,7 @@
 
 ### To start the service
 > flask run
+
+
+FLASK_APP=run.py
+FLASK_DEBUG=1
