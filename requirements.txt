@@ -154,7 +154,6 @@ responses==0.18.0
 s3transfer==0.6.1
 scikit-learn
 scipy==1.9.3
-search-l3s-aimeta
 sentence-transformers==2.2.2
 sentencepiece==0.1.97
 sentry-sdk==1.21.1
