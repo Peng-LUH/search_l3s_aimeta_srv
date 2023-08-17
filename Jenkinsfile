@@ -15,7 +15,7 @@ pipeline {
         stage('Git') {
             steps {
                 cleanWs()
-                git branch: 'main', url: 'https://github.com/e-Learning-by-SSE/search-l3s_aimeta_srv.git'
+                git branch: 'main', url: 'https://github.com/e-Learning-by-SSE/search-l3s_aimeta_service.git'
             }
         }
 		
@@ -34,7 +34,7 @@ pipeline {
                     // - https://stackoverflow.com/a/51991389
                     env.API_VERSION = sh(script: 'grep -Po "(?<=    version=\\").*(?=\\",)" setup.py', returnStdout: true).trim()
                     echo "API: ${env.API_VERSION}"
-                    dockerImage = docker.build 'e-learning-by-sse/search-l3s_aimeta-service'
+                    dockerImage = docker.build 'e-learning-by-sse/search-l3s_aimeta_service'
                     docker.withRegistry('https://ghcr.io', 'github-ssejenkins') {
                         dockerImage.push("${env.API_VERSION}")
                         dockerImage.push('latest')
