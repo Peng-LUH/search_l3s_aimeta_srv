@@ -23,8 +23,8 @@ RUN pip install -e .[dev]
 
 # RUN python initializer.py
 
-EXPOSE 5001
+EXPOSE 5000
 
 ENV FLASK_APP=run.py
-CMD [ "flask", "run", "--host=0.0.0.0"]
+CMD [ "flask", "run", "--host=0.0.0.0 --port=5000"]
 
