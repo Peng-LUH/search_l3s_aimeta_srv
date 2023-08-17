@@ -3,12 +3,12 @@ import json, requests
 from requests.exceptions import JSONDecodeError
 import sys
 
-sys.path.append(os.getcwd())
+# sys.path.append(os.getcwd())
 # sys.path.append('..')
 # sys.path.append('.')
 
 
-from api.dataset_preprocess.logic import Text_Preprocess
+from search_l3s_aimeta.api.dataset_preprocess.logic import Text_Preprocess
 
 from dotenv import load_dotenv
 load_dotenv()

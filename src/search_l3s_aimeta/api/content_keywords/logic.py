@@ -4,7 +4,7 @@ from requests.exceptions import JSONDecodeError
 import sys
 import unicodedata
 
-sys.path.append(os.getcwd())
+# sys.path.append(os.getcwd())
 # sys.path.append('..')
 # sys.path.append('.')
 
