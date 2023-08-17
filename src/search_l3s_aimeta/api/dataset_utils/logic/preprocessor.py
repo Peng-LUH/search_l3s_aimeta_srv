@@ -12,7 +12,7 @@ from http import HTTPStatus
 
 
 sys.path.append(os.getcwd())
-from util.path import get_dataset_path
+from search_l3s_aimeta.util.path import get_dataset_path
 
 
 

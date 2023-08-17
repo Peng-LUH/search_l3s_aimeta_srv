@@ -8,15 +8,13 @@ from src.search_l3s_aimeta import create_app, db
 app = create_app(os.getenv("FLASK_ENV", "development"))
 
 
-@app.shell_context_processor
-def shell():
-    return {"db": db}
-
-
+# @app.shell_context_processor
+# def shell():
+#     return {"db": db}
 
 
 if __name__=='__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5001)
 
 
 
