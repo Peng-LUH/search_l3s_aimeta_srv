@@ -143,7 +143,6 @@ pytest-flake8==1.1.0
 python-dateutil
 python-dotenv==1.0.0
 python-louvain
-pytrec-eval==0.5
 pytz
 PyYAML==6.0
 pyzmq
