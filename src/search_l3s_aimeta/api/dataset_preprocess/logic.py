@@ -3,7 +3,7 @@ import json, requests
 from requests.exceptions import JSONDecodeError
 import unicodedata
 import sys
-
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 sys.path.append(os.getcwd())
@@ -20,6 +20,7 @@ sys.path.append(os.getcwd())
 from dotenv import load_dotenv
 
 load_dotenv()
+load_dotenv(dotenv_path=Path("src/search_l3s_aimeta/.env_env"))
 
 
 class Text_Preprocess(object):

@@ -6,6 +6,7 @@ import unicodedata
 import base64
 import base64
 import sys
+from pathlib import Path
 
 from urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -19,6 +20,8 @@ sys.path.append(os.getcwd())
 
 from dotenv import load_dotenv
 load_dotenv()
+load_dotenv(dotenv_path=Path("src/search_l3s_aimeta/.env_env"))
+
 
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_ENDPOINT = os.getenv("API_ENDPOINT")

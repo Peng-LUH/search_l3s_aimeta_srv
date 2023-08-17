@@ -3,6 +3,7 @@ import json, requests
 from requests.exceptions import JSONDecodeError
 import sys
 import unicodedata
+from pathlib import Path
 
 
 # sys.path.append(os.getcwd())
@@ -14,6 +15,8 @@ from search_l3s_aimeta.api.dataset_preprocess.logic import Text_Preprocess
 
 from dotenv import load_dotenv
 load_dotenv()
+load_dotenv(dotenv_path=Path("src/search_l3s_aimeta/.env_env"))
+
 
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_ENDPOINT = os.getenv("API_ENDPOINT")
