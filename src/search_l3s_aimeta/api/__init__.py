@@ -7,7 +7,7 @@ import sys
 sys.path.append("..")
 
 
-api_bp = Blueprint("api", __name__, url_prefix="/aimeta")
+api_bp = Blueprint("api", __name__, url_prefix="/api/v1")
 # authorizations = {"Bearer": {"type": "apiKey", "in": "header", "name": "Authorization"}}
 
 
