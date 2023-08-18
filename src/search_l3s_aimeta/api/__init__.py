@@ -7,7 +7,7 @@ import sys
 sys.path.append("..")
 
 
-api_bp = Blueprint("api", __name__, url_prefix="/api/v1")
+api_bp = Blueprint("api", __name__, url_prefix="/l3s-aimeta")
 # authorizations = {"Bearer": {"type": "apiKey", "in": "header", "name": "Authorization"}}
 
 
@@ -15,8 +15,8 @@ api = Api(api_bp,
           version="0.0.1",
           title="L3S AI-Meta Service(AIMS) for SEARCH",
           description="Welcome to the Swagger UI documentation site!",
-          doc="/ui",
-        #   authorizations=authorizations,
+          # doc="/ui",
+          #   authorizations=authorizations,
           )
 
 from search_l3s_aimeta.api.test.endpoints import ns_test
