@@ -20,7 +20,6 @@ sys.path.append(os.getcwd())
 
 from dotenv import load_dotenv
 load_dotenv()
-load_dotenv(dotenv_path=Path("src/search_l3s_aimeta/.env_env"))
 
 
 API_KEY = os.getenv("OPENAI_API_KEY")
