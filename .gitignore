@@ -1,3 +1,5 @@
 .env
 .venv
-.env_env
+src/search_l3s_aimeta.egg-info
+**/__pycache__
+.dockercmd
