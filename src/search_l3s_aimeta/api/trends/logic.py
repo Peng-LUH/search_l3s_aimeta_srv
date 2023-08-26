@@ -76,7 +76,6 @@ class Trends(object):
         response = requests.get('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/app/jobs',
                                 headers=headers, params=params, verify=False)
         
-        print("response", response)
         
         return response.json()
     
@@ -107,7 +106,7 @@ class Trends(object):
 
     @classmethod
     def create_formal_skill_histogram(self, skills_compilation):
-        """ key_format := <skill_name>|<skill_level>|<context>    print(results['stellenangebote'][0]["refnr"])
+        """ key_format := <skill_name>|<skill_level>|<context>   
 
             value_format := <number_of_occurencies>"""
         histogram = {}
@@ -145,11 +144,15 @@ class Trends(object):
 
 # # Search for jobs
 # jwt = aims.get_jwt()
+# print(jwt)
+# print('#'*50)
 # results = aims.search(jwt["access_token"], job, city, radius)
-
+# print("result", results)
 # skills_compilation = aims.formal_skills(jwt["access_token"], results["stellenangebote"])
-# # with open('skills.json', 'w', encoding='utf-8') as f:
-# #     json.dump(skills_compilation, f, sort_keys=True, indent=2, ensure_ascii=False)
+# print('#'*100)
+#print(skills_compilation)
+# with open('skills.json', 'w', encoding='utf-8') as f:
+#     json.dump(skills_compilation, f, sort_keys=True, indent=2, ensure_ascii=False)
 
 
 # hist = aims.create_formal_skill_histogram(skills_compilation)
