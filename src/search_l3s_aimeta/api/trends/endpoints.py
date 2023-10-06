@@ -24,8 +24,8 @@ ns_trends.models[input_dataset_model.name] = input_dataset_model
 
 
 
-@ns_trends.route("/trending-skills/", endpoint="trending-skills")
-class GetTrends(Resource):     
+@ns_trends.route("/search-jobs/", endpoint="search-jobs")
+class SearchJobs(Resource):     
     @ns_trends.doc(params={
         'loc': 'location',
         'job_name': 'name of the job',
@@ -39,35 +39,108 @@ class GetTrends(Resource):
             radius = request.args.get('radius')
 
             from search_l3s_aimeta.api.trends.logic import Trends
-            jwt = Trends.get_jwt()
+            trend = Trends()
 
-            results = Trends.search(jwt["access_token"], loc, job_name, radius)
-            print("results", results)
+            jwt = trend.get_jwt()
 
-            skills_compilation = Trends.formal_skills(jwt["access_token"], results["stellenangebote"])
-            hist = Trends.create_formal_skill_histogram(skills_compilation)
-            sorted_kv_list = sorted(hist.items(), key=lambda x:x[1], reverse=True)
-            print("<skill>|<skill_level>|<context> --> <frequency>")
-            for t in sorted_kv_list:
-                print(t[0] +" --> "+ str(t[1]))
+            results = trend.search(jwt["access_token"], loc, job_name, radius)
+            # print("results", results)
+
+            # skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
+            # hist = trend.create_formal_skill_histogram(skills_compilation)
+            # sorted_kv_list = sorted(hist.items(), key=lambda x:x[1], reverse=True)
+            # print("<skill>|<skill_level>|<context> --> <frequency>")
+            # for t in sorted_kv_list:
+            #     print(t[0] +" --> "+ str(t[1]))
 
         
-            return sorted_kv_list,  HTTPStatus.OK
+            return results['stellenangebote'],  HTTPStatus.OK
 
-    def post(self, id):
-          mls_response = "testing"
-          return mls_response, HTTPStatus.OK
+    # def post(self, id):
+    #       mls_response = "testing"
+    #       return mls_response, HTTPStatus.OK
     
-    def delete(self, id):
-        mls_response = "testing"
-        return mls_response, HTTPStatus.OK
+    # def delete(self, id):
+    #     mls_response = "testing"
+    #     return mls_response, HTTPStatus.OK
     
-    def put(self, id):
-        mls_response = "testing"
-        return mls_response, HTTPStatus.OK
+    # def put(self, id):
+    #     mls_response = "testing"
+    #     return mls_response, HTTPStatus.OK
 
 
 
+@ns_trends.route("/trending-skills/", endpoint="trending-skills")
+class GetTrends(Resource):     
+    @ns_trends.doc(params={
+        'loc': 'location',
+        'job_name': 'name of the job',
+        'radius': 'radius to search for jobs',
+    })
+    def get(self):   
+            "trending skills"            
+            loc = request.args.get('loc')
+            job_name = request.args.get('job_name')
+            radius = request.args.get('radius')
 
+            from search_l3s_aimeta.api.trends.logic import Trends
+            trend = Trends()
 
+            jwt = trend.get_jwt()
+
+            results = trend.search(jwt["access_token"], loc, job_name, radius)
+            # print("results", results)
+
+            skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
+            hist = trend.create_formal_skill_histogram(skills_compilation)
+            # sorted_kv_list = sorted(hist.items(), key=lambda x:x[1], reverse=True)
+            # print("<skill>|<skill_level>|<context> --> <frequency>")
+            # for t in sorted_kv_list:
+            #     print(t[0] +" --> "+ str(t[1]))
+
+        
+            return hist,  HTTPStatus.OK
+
+    # def post(self, id):
+    #       mls_response = "testing"
+    #       return mls_response, HTTPStatus.OK
     
+    # def delete(self, id):
+    #     mls_response = "testing"
+    #     return mls_response, HTTPStatus.OK
+    
+    # def put(self, id):
+    #     mls_response = "testing"
+    #     return mls_response, HTTPStatus.OK
+
+
+@ns_trends.route("/skills/", endpoint="skills")
+class GetSkills(Resource):     
+    @ns_trends.doc(params={
+        'loc': 'location',
+        'job_name': 'name of the job',
+        'radius': 'radius to search for jobs',
+    })
+    def get(self):   
+            "get skills"            
+            loc = request.args.get('loc')
+            job_name = request.args.get('job_name')
+            radius = request.args.get('radius')
+
+            from search_l3s_aimeta.api.trends.logic import Trends
+            trend = Trends()
+
+            jwt = trend.get_jwt()
+
+            results = trend.search(jwt["access_token"], loc, job_name, radius)
+            # print("results", results)
+
+            skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
+            #hist = trend.create_formal_skill_histogram(skills_compilation)
+            # sorted_kv_list = sorted(hist.items(), key=lambda x:x[1], reverse=True)
+            # print("<skill>|<skill_level>|<context> --> <frequency>")
+            # for t in sorted_kv_list:
+            #     print(t[0] +" --> "+ str(t[1]))
+
+        
+            return skills_compilation,  HTTPStatus.OK
