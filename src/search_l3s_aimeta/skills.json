@@ -1,0 +1,152 @@
+{
+  "10000-1193321431-S": {
+    "job_title": "Physiker/in",
+    "skills": [
+      {
+        "auspraegungen": {
+          "1": [
+            "Elektronik"
+          ]
+        },
+        "hierarchieName": "Produktion, Verarbeitung, Technik"
+      },
+      {
+        "auspraegungen": {
+          "1": [
+            "Physikalische Mess-, Prüfverfahren"
+          ]
+        },
+        "hierarchieName": "Wissenschaft, Forschung, Entwicklung"
+      }
+    ]
+  },
+  "10000-1193453672-S": {
+    "job_title": "Fernmeldeelektroniker/in",
+    "skills": [
+      {
+        "auspraegungen": {
+          "1": [
+            "Wartung, Reparatur, Instandhaltung",
+            "Montage (Elektrotechnik)",
+            "Löten"
+          ],
+          "2": [
+            "Elektronik",
+            "Elektrotechnik",
+            "Geräteelektronik"
+          ]
+        },
+        "hierarchieName": "Produktion, Verarbeitung, Technik"
+      }
+    ]
+  },
+  "10000-1193560660-S": {
+    "job_title": "Elektroniker/in - Automatisierungstechnik",
+    "skills": [
+      {
+        "auspraegungen": {
+          "1": [
+            "Leitstandtechnik",
+            "Kundendienst",
+            "Automatisierungstechnik, Prozessautomatisierung",
+            "SPS-Programmierung, SPS-Technik",
+            "Fertigungstechnik",
+            "Arbeitsvorbereitung",
+            "Elektrische Antriebstechnik",
+            "Elektrotechnik",
+            "Mikroelektronik",
+            "Elektroinstallation",
+            "Informationstechnik, Computertechnik",
+            "Pneumatik"
+          ],
+          "2": [
+            "Qualitätsprüfung, Qualitätssicherung",
+            "Wartung, Reparatur, Instandhaltung",
+            "Hybride Steuerungen",
+            "Mess-, Steuer-, Regeltechnik (MSR)",
+            "Mikrocomputer-, Mikroprozessortechnik",
+            "Analogtechnik",
+            "Digitaltechnik",
+            "CAM-, CIM-Systeme anwenden",
+            "Crimpen",
+            "Elektronik",
+            "Prüffeld",
+            "Schaltungstechnik",
+            "Schaltschrankbau, Schaltgerätebau",
+            "Melde- und Signalanlagen, -technik"
+          ],
+          "3": [
+            "Montage (Elektrotechnik)",
+            "Mikrosystemtechnik"
+          ]
+        },
+        "hierarchieName": "Produktion, Verarbeitung, Technik"
+      },
+      {
+        "auspraegungen": {
+          "2": [
+            "Bussysteme",
+            "Hardwareinstallation, Softwareinstallation"
+          ]
+        },
+        "hierarchieName": "IT, DV, Computer"
+      }
+    ]
+  },
+  "10000-1193934465-S": {
+    "job_title": "Elektrotechnikermeister/in",
+    "skills": [
+      {
+        "auspraegungen": {
+          "2": [
+            "Sicherheitstechnik"
+          ]
+        },
+        "hierarchieName": "Dienstleistungen"
+      },
+      {
+        "auspraegungen": {
+          "2": [
+            "Arbeitsvorbereitung",
+            "Elektrische Energietechnik",
+            "Elektroinstallation"
+          ]
+        },
+        "hierarchieName": "Produktion, Verarbeitung, Technik"
+      },
+      {
+        "auspraegungen": {
+          "2": [
+            "Kundenberatung, -betreuung"
+          ]
+        },
+        "hierarchieName": "Wirtschaft, Verwaltung"
+      }
+    ]
+  },
+  "13181-JP4068822-S": {
+    "job_title": "Elektrotechnikermeister/in",
+    "skills": [
+      {
+        "auspraegungen": {
+          "2": [
+            "Sicherheitstechnik"
+          ]
+        },
+        "hierarchieName": "Dienstleistungen"
+      },
+      {
+        "auspraegungen": {
+          "2": [
+            "Konstruktion",
+            "SPS-Programmierung, SPS-Technik",
+            "Sondermaschinenbau",
+            "Antriebstechnik",
+            "Schaltschrankbau, Schaltgerätebau"
+          ]
+        },
+        "hierarchieName": "Produktion, Verarbeitung, Technik"
+      }
+    ]
+  }
+}

@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+
 from search_l3s_aimeta.config import get_config
 
 cors = CORS()
@@ -27,3 +28,5 @@ def create_app(config_name):
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     return app
+
+

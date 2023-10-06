@@ -1,0 +1,28 @@
+services:
+  search-l3s-search-service:
+    image: ghcr.io/e-learning-by-sse/search-l3s_aimeta_service:latest
+    restart: unless-stopped
+    networks:
+      - search
+    ports:
+      - "8043:5000"
+  # dev-db-l3s:
+  #   image: postgres:13
+  #   # ports:
+  #   #   - 5435:5432
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: admin
+  #     POSTGRES_DB: l3s-db
+  #   networks:
+  #     - search
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: SearchDB
+    networks:
+      - search
+networks:
+  search:

@@ -3,6 +3,7 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 
+
 SQLITE_DEV = "sqlite:///" + str(HERE / "dev.db")
 SQLITE_TEST = "sqlite:///" + str(HERE / "test.db")
 SQLITE_PROD = "sqlite:///" + str(HERE / "prod.db")
