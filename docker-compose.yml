@@ -5,7 +5,7 @@ services:
     networks:
       - search
     ports:
-      - "8043:5000"
+      - "9041:9041"
   # dev-db-l3s:
   #   image: postgres:13
   #   # ports:
