@@ -3,6 +3,7 @@ import json
 from flask_restx import Namespace, Resource
 import sys
 from flask import request
+from flask_cors import cross_origin
 
 
 sys.path.append('..')
@@ -23,7 +24,6 @@ ns_trends.models[object_model.name] = object_model
 ns_trends.models[input_dataset_model.name] = input_dataset_model
 
 
-
 @ns_trends.route("/search-jobs/", endpoint="search-jobs")
 class SearchJobs(Resource):     
     @ns_trends.doc(params={
@@ -31,20 +31,27 @@ class SearchJobs(Resource):
         'job_name': 'name of the job',
         'radius': 'radius to search for jobs',
     })
+    #@cross_origin()
     def get(self):   
             "Search for job offers"
             
             loc = request.args.get('loc')
             job_name = request.args.get('job_name')
-            radius = request.args.get('radius')
+            radius = 50 #request.args.get('radius')
 
             from search_l3s_aimeta.api.trends.logic import Trends
             trend = Trends()
 
+
+
             jwt = trend.get_jwt()
 
+            print("jwt", jwt)
+
+            print('#'*100)
+            print(f"loc:{loc} job_name: {job_name} radius: {radius}")
             results = trend.search(jwt["access_token"], loc, job_name, radius)
-            # print("results", results)
+            print("results", results)
 
             # skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
             # hist = trend.create_formal_skill_histogram(skills_compilation)

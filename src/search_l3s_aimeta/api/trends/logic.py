@@ -32,7 +32,6 @@ class Trends(object):
     def __init__(self) -> None:
         super().__init__()
 
-    @classmethod
     def get_jwt(self):
         """fetch the jwt token object"""
         headers = {
@@ -52,7 +51,6 @@ class Trends(object):
 
         return response.json()    
     
-    @classmethod
     def search(self, jwt, what, where, radius):
         """search for jobs. params can be found here: https://jobsuche.api.bund.dev/"""
         params = (
@@ -66,10 +64,10 @@ class Trends(object):
         )
 
         headers = {
-            'User-Agent': 'Jobsuche/2.9.2 (de.arbeitsagentur.jobboerse; build:1077; iOS 15.1.0) Alamofire/5.4.4',
+            #'User-Agent': 'Jobsuche/2.9.2 (de.arbeitsagentur.jobboerse; build:1077; iOS 15.1.0) Alamofire/5.4.4',
             'Host': 'rest.arbeitsagentur.de',
-            'OAuthAccessToken': jwt,
-            'Connection': 'keep-alive',
+            'Authorization': f'Bearer {jwt}',
+            #'Connection': 'keep-alive',
             "Content-Type": "application/json"
         }
 
@@ -79,7 +77,6 @@ class Trends(object):
         
         return response.json()
     
-    @classmethod
     def job_details(self,jwt, job_ref):
 
         headers = {
@@ -95,7 +92,6 @@ class Trends(object):
 
         return response.json()
     
-    @classmethod
     def formal_skills(self, jwt, offers):
         skills = {}
         for offer in offers:
@@ -104,7 +100,6 @@ class Trends(object):
                 skills[offer["refnr"]] = {"job_title" : details["beruf"], "skills" : details["fertigkeiten"]}
         return skills
 
-    @classmethod
     def create_formal_skill_histogram(self, skills_compilation):
         """ key_format := <skill_name>|<skill_level>|<context>   
 
