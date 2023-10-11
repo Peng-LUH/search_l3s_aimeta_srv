@@ -5,46 +5,40 @@ import sys
 
 sys.path.append('..')
 
-from search_l3s_aimeta.api.summary.dto import (
-    dataset_model,
-    parameter_model,
-    object_model,
-    input_dataset_model
+from search_l3s_aimeta.api.context_keywords.dto import (
+dto_context_tags_response
 )
 
 
 
 ns_context_keywords = Namespace("Context Keywords", validate=True)
-ns_context_keywords.models[dataset_model.name] = dataset_model
-ns_context_keywords.models[parameter_model.name] = parameter_model
-ns_context_keywords.models[object_model.name] = object_model
-ns_context_keywords.models[input_dataset_model.name] = input_dataset_model
+ns_context_keywords.models[dto_context_tags_response.name] = dto_context_tags_response
 
 
 
-@ns_context_keywords.route("/context-keywords/<string:id>", endpoint="context-keywords")
+@ns_context_keywords.route('/completions/<string:task_id>/context_tags', endpoint="aims_context_tags")
 class GetContextKeywords(Resource): 
     
-    def get(self, id):   
+    def get(self, task_id):   
             "Retrieve Context Keywords of the Task"
             from search_l3s_aimeta.api.context_keywords.logic import ContextKeywords
  
     
-            mls_response = ContextKeywords.generate_context_keywords(id)
+            mls_response = ContextKeywords.generate_context_keywords(task_id)
         
             return mls_response, HTTPStatus.OK
 
 
 
-    def post(self, id):
+    def post(self, task_id):
           mls_response = "testing"
           return mls_response, HTTPStatus.OK
     
-    def delete(self, id):
+    def delete(self, task_id):
         mls_response = "testing"
         return mls_response, HTTPStatus.OK
     
-    def put(self, id):
+    def put(self, task_id):
         mls_response = "testing"
         return mls_response, HTTPStatus.OK
 

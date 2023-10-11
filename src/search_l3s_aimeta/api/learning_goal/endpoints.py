@@ -6,42 +6,37 @@ import sys
 sys.path.append('..')
 
 from search_l3s_aimeta.api.learning_goal.dto import (
-    dataset_model,
-    parameter_model,
-    object_model,
-    input_dataset_model
+    dto_learning_goal_response
 )
 
 
 
 ns_learning_goal = Namespace("Learning Goal", validate=True)
-ns_learning_goal.models[dataset_model.name] = dataset_model
-ns_learning_goal.models[parameter_model.name] = parameter_model
-ns_learning_goal.models[object_model.name] = object_model
-ns_learning_goal.models[input_dataset_model.name] = input_dataset_model
+ns_learning_goal.models[dto_learning_goal_response.name] = dto_learning_goal_response
 
 
 
-@ns_learning_goal.route("/learning-goal/<string:id>", endpoint="learning-goal")
+
+@ns_learning_goal.route('/completions/<string:task_id>/learning_goal', endpoint="aims_learning_goal")
 class GetLearningGoal(Resource): 
     
-    def get(self, id):   
+    def get(self, task_id):   
             "Retrieve Learnng Goals of the Task"
             from search_l3s_aimeta.api.learning_goal.logic import LearningGoal
  
-            mls_response = LearningGoal.generate_learning_goal(id)
+            mls_response = LearningGoal.generate_learning_goal(task_id)
         
             return mls_response, HTTPStatus.OK
 
-    def post(self, id):
+    def post(self, task_id):
           mls_response = "testing"
           return mls_response, HTTPStatus.OK
     
-    def delete(self, id):
+    def delete(self, task_id):
         mls_response = "testing"
         return mls_response, HTTPStatus.OK
     
-    def put(self, id):
+    def put(self, task_id):
         mls_response = "testing"
         return mls_response, HTTPStatus.OK
 

@@ -6,41 +6,36 @@ import sys
 sys.path.append('..')
 
 from search_l3s_aimeta.api.title.dto import (
-    dataset_model,
-    parameter_model,
-    object_model,
-    input_dataset_model
+dto_title_response
 )
 
 
 
 ns_title = Namespace("Course Title", validate=True)
-ns_title.models[dataset_model.name] = dataset_model
-ns_title.models[parameter_model.name] = parameter_model
-ns_title.models[object_model.name] = object_model
-ns_title.models[input_dataset_model.name] = input_dataset_model
+ns_title.models[dto_title_response.name] = dto_title_response
 
 
 
-@ns_title.route("/course-title/<string:id>", endpoint="course-title")
+
+@ns_title.route("/completions/<string:task_id>/title", endpoint="aims-title")
 class GetTitle(Resource):     
-    def get(self, id):   
+    def get(self, task_id):   
             "Generate Titles for the Task"
             from search_l3s_aimeta.api.title.logic import Title
  
-            mls_response = Title.generate_title(id)
+            mls_response = Title.generate_title(task_id)
         
             return mls_response, HTTPStatus.OK
 
-    def post(self, id):
+    def post(self, task_id):
           mls_response = "testing"
           return mls_response, HTTPStatus.OK
     
-    def delete(self, id):
+    def delete(self, task_id):
         mls_response = "testing"
         return mls_response, HTTPStatus.OK
     
-    def put(self, id):
+    def put(self, task_id):
         mls_response = "testing"
         return mls_response, HTTPStatus.OK
 
