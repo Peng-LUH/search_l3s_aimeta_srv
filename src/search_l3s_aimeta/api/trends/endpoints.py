@@ -37,7 +37,7 @@ class SearchJobs(Resource):
             
             loc = request.args.get('loc')
             job_name = request.args.get('job_name')
-            radius = 50 #request.args.get('radius')
+            radius = request.args.get('radius')
 
             from search_l3s_aimeta.api.trends.logic import Trends
             trend = Trends()
@@ -46,12 +46,7 @@ class SearchJobs(Resource):
 
             jwt = trend.get_jwt()
 
-            print("jwt", jwt)
-
-            print('#'*100)
-            print(f"loc:{loc} job_name: {job_name} radius: {radius}")
-            results = trend.search(jwt["access_token"], loc, job_name, radius)
-            print("results", results)
+            results = trend.search(jwt["access_token"], job_name, loc,  radius)
 
             # skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
             # hist = trend.create_formal_skill_histogram(skills_compilation)
@@ -62,18 +57,6 @@ class SearchJobs(Resource):
 
         
             return results['stellenangebote'],  HTTPStatus.OK
-
-    # def post(self, id):
-    #       mls_response = "testing"
-    #       return mls_response, HTTPStatus.OK
-    
-    # def delete(self, id):
-    #     mls_response = "testing"
-    #     return mls_response, HTTPStatus.OK
-    
-    # def put(self, id):
-    #     mls_response = "testing"
-    #     return mls_response, HTTPStatus.OK
 
 
 
@@ -95,7 +78,7 @@ class GetTrends(Resource):
 
             jwt = trend.get_jwt()
 
-            results = trend.search(jwt["access_token"], loc, job_name, radius)
+            results = trend.search(jwt["access_token"], job_name, loc, radius)
             # print("results", results)
 
             skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
@@ -107,18 +90,6 @@ class GetTrends(Resource):
 
         
             return hist,  HTTPStatus.OK
-
-    # def post(self, id):
-    #       mls_response = "testing"
-    #       return mls_response, HTTPStatus.OK
-    
-    # def delete(self, id):
-    #     mls_response = "testing"
-    #     return mls_response, HTTPStatus.OK
-    
-    # def put(self, id):
-    #     mls_response = "testing"
-    #     return mls_response, HTTPStatus.OK
 
 
 @ns_trends.route("/skills/", endpoint="skills")
@@ -139,8 +110,7 @@ class GetSkills(Resource):
 
             jwt = trend.get_jwt()
 
-            results = trend.search(jwt["access_token"], loc, job_name, radius)
-            # print("results", results)
+            results = trend.search(jwt["access_token"], job_name, loc, radius)
 
             skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
             #hist = trend.create_formal_skill_histogram(skills_compilation)

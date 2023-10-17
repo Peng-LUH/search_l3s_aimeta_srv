@@ -57,7 +57,7 @@ class Trends(object):
             ('angebotsart', '1'),
             ('page', '1'),
             ('pav', 'false'),
-            #('size', '100'),
+            ('size', '100'),
             ('umkreis', radius),
             ('was', what),
             ('wo', where),
