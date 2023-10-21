@@ -63,7 +63,7 @@ class ContextKeywords(Text_Preprocess,object):
     @classmethod
     def generate_context_keywords(self, id):
 
-        user_message =  "In welchen fachlichen Kontext passt die nachfolgende Lerneinheit? Antworte im comma separated list Format. Format: [<kontext>, <kontext>, ...]"
+        user_message =  """In welchen fachlichen Kontext passt die nachfolgende Lerneinheit? Antworte im comma separated list auf strings Format. Format: ["kontext", "kontext", ... , "kontext"]"""
 
         system_messages = "Sie sind ein hilfreicher Assistent, der aus einer gegebenen Lerneinheit Schlüsselwörter für den fachlichen Kontext extrahiert."
 
@@ -85,8 +85,9 @@ class ContextKeywords(Text_Preprocess,object):
         response_text = self.preprocess_text(response_text)
 
 
+
         
-        return {"Context Keywords":response_text}
+        return json.loads(response_text)
 
     
 

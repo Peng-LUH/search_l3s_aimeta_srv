@@ -82,11 +82,13 @@ class Title(Text_Preprocess,object):
         ]
 
         response_text = self.generate_chat_completion(messages)
+        
         response_text = self.preprocess_text(response_text)
 
 
+
         
-        return {"Title":response_text}
+        return json.loads(response_text)
 
     
 

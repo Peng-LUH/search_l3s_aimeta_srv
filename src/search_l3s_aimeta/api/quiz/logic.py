@@ -62,7 +62,7 @@ class Quiz(Text_Preprocess,object):
     @classmethod
     def generate_quiz(self, id):
 
-        user_message =  """Erstelle zu nachfolgendem Lerninhalt jeweils zwei Fragen auf bloomscher Taxonomiestufe "Wissen", "Verstehen" und "Anwenden": """
+        user_message =  """Erstelle zu nachfolgendem Lerninhalt jeweils zwei Fragen auf bloomscher Taxonomiestufe "Wissen", "Verstehen" und "Anwenden" in dictionary Format. Format: {"Wissen": [<question>, <question>, ... , <question>], "Verstehen": [<question>, <question>, ... , <question>], "Anwenden": [<question>, <question>, ... , <question>]} """
 
         system_messages = "Sie sind ein hilfreicher Assistent, der Fragen aus einer bestimmten Lerneinheit generiert."
 
@@ -82,10 +82,12 @@ class Quiz(Text_Preprocess,object):
         response_text = self.generate_chat_completion(messages)
         response_text = self.preprocess_text(response_text)
 
+        print(json.loads(response_text))
+
 
         
 
-        return {"Quiz":response_text}
+        return json.loads(response_text)
 
     
 

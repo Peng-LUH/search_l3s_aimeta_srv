@@ -82,7 +82,7 @@ class Summary(Text_Preprocess,object):
         response_text = self.preprocess_text(response_text)
         
 
-        return {"SUMMARY":response_text}
+        return json.loads(response_text)
 
     
 

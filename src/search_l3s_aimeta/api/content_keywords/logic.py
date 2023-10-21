@@ -86,7 +86,7 @@ class ContentKeywords(Text_Preprocess,object):
 
         
 
-        return {"Content Keywords":response_text}
+        return json.loads(response_text)
 
     
 

@@ -18,28 +18,17 @@ ns_context_keywords.models[dto_context_tags_response.name] = dto_context_tags_re
 
 @ns_context_keywords.route('/completions/<string:task_id>/context_tags', endpoint="aims_context_tags")
 class GetContextKeywords(Resource): 
-    
+    @ns_context_keywords.marshal_with(dto_context_tags_response)
     def get(self, task_id):   
-            "Retrieve Context Keywords of the Task"
+            "Retrieve Context Tags of the Task"
             from search_l3s_aimeta.api.context_keywords.logic import ContextKeywords
  
     
             mls_response = ContextKeywords.generate_context_keywords(task_id)
         
-            return mls_response, HTTPStatus.OK
+            return {"task_id":task_id, "context_tags": mls_response}, HTTPStatus.OK
 
 
 
-    def post(self, task_id):
-          mls_response = "testing"
-          return mls_response, HTTPStatus.OK
-    
-    def delete(self, task_id):
-        mls_response = "testing"
-        return mls_response, HTTPStatus.OK
-    
-    def put(self, task_id):
-        mls_response = "testing"
-        return mls_response, HTTPStatus.OK
 
     

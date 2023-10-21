@@ -19,26 +19,15 @@ ns_summary.models[dto_summary_response.name] = dto_summary_response
 
 @ns_summary.route("/completions/<string:task_id>/summary", endpoint="aims_summary")
 class GetSummary(Resource): 
-    
+    @ns_summary.marshal_with(dto_summary_response)
     def get(self, task_id):   
             "Retrieve a summary of the Task"
             from search_l3s_aimeta.api.summary.logic import Summary
     
             mls_response = Summary.generate_summary(task_id)
         
-            return mls_response, HTTPStatus.OK
+            return {"task_id":task_id,"summary": mls_response}, HTTPStatus.OK
 
-    def post(self, task_id):
-          mls_response = "testing"
-          return mls_response, HTTPStatus.OK
-    
-    def delete(self, task_id):
-        mls_response = "testing"
-        return mls_response, HTTPStatus.OK
-    
-    def put(self, task_id):
-        mls_response = "testing"
-        return mls_response, HTTPStatus.OK
 
 
 

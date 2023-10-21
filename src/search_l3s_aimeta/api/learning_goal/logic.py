@@ -88,7 +88,7 @@ class LearningGoal(Text_Preprocess,object):
 
 
         
-        return {"Learning Goal":response_text}
+        return json.loads(response_text)
 
     
 
