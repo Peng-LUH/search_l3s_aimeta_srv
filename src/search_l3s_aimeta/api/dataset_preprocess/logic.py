@@ -4,6 +4,9 @@ from requests.exceptions import JSONDecodeError
 import unicodedata
 import sys
 from pathlib import Path
+from flask import abort
+import re
+
 
 from bs4 import BeautifulSoup
 sys.path.append(os.getcwd())
@@ -81,7 +84,6 @@ class Text_Preprocess(object):
         auth_header = self.__get_auth_header()
         taskstep_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/task-steps/" + object_id, headers=auth_header)
     
-        print("taskstep response",taskstep_response)
         return taskstep_response
 
     @classmethod
@@ -109,28 +111,38 @@ class Text_Preprocess(object):
 
     @classmethod
     def read_a_taskstep(self, task_step):
+        assert 'id' in task_step.keys(), abort(400, "Invalid Task Step ID.")  
+
         text = ' '  
+        assert len(task_step['content'])>0, abort(400, "Task Step has no content to process.")  
+
         for i in range(len(task_step['content'])):
             if task_step["content"][i]['type']==1:
                 task_step_html = task_step['content'][i]['value']
                 soup = BeautifulSoup(task_step_html, 'html.parser')    
                 sub_text = soup.get_text(strip=True,separator=' ') #(separator='\n')
 
-                double_title = task_step["title"] + ' ' +task_step["title"]
-
+                double_title = task_step["title"] + ' ' + task_step["title"]
                 if double_title in sub_text:
                     sub_text = sub_text.replace(double_title, task_step["title"] )
                 sub_text = self.preprocess_text(sub_text)
                 text+=sub_text
+             
 
         return text
 
 
     @classmethod
     def read_a_task(self, task):
+        assert 'id' in task.keys(), abort(400, "Invalid Task ID.")  
+            
         task_id = task["id"]
         task_title = task["title"]
-        task_set_id = task['taskSet'].split("/")[-1]
+
+        if 'taskSet' in task.keys():    
+            task_set_id = task['taskSet'].split("/")[-1]
+        else:
+            task_set_id = None                
 
         task_steps_response  = self.get_all_tasksteps_response(task)
 
@@ -143,7 +155,6 @@ class Text_Preprocess(object):
             i+=1
             task_step_ids.append(task_step["id"])
 
-
         return task_id, task_title, text, task_step_ids, task_set_id        
 
 
@@ -152,7 +163,7 @@ class Text_Preprocess(object):
         taskstep_response = self.get_taskstep_response(id)
         task_step = taskstep_response.json()
         text = self.read_a_taskstep(task_step)
-        result = {'taskstep_id':id, 'text':text}
+        result = {'taskstep_id':id, 'taskstep_text':text}
 
         return result
     
@@ -175,8 +186,3 @@ class Text_Preprocess(object):
         return result
 
 
-# text_pre = Text_Preprocess()
-
-
-# result = text_pre.pre_process_task('20')
-# print(result)

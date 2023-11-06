@@ -2,6 +2,7 @@ from http import HTTPStatus
 import json
 from flask_restx import Namespace, Resource
 import sys
+from flask import abort
 
 sys.path.append('..')
 
@@ -23,9 +24,11 @@ class GetContentKeywords(Resource):
             "Retrieve Content tags of the Task"
             from search_l3s_aimeta.api.content_keywords.logic import ContentKeywords
             
+
             mls_response = ContentKeywords.generate_content_keywords(task_id)
-        
-            return {"task_id":task_id, "content_tags": mls_response}, HTTPStatus.OK
+
+            return {"task_id":task_id, "content_tags": mls_response}, HTTPStatus.OK    
+                    
 
  
 

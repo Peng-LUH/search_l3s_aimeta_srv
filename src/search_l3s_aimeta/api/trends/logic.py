@@ -64,10 +64,10 @@ class Trends(object):
         )
 
         headers = {
-            #'User-Agent': 'Jobsuche/2.9.2 (de.arbeitsagentur.jobboerse; build:1077; iOS 15.1.0) Alamofire/5.4.4',
+            'User-Agent': 'Jobsuche/2.9.2 (de.arbeitsagentur.jobboerse; build:1077; iOS 15.1.0) Alamofire/5.4.4',
             'Host': 'rest.arbeitsagentur.de',
             'Authorization': f'Bearer {jwt}',
-            #'Connection': 'keep-alive',
+            'Connection': 'keep-alive',
             "Content-Type": "application/json"
         }
 
@@ -111,7 +111,7 @@ class Trends(object):
                 skill_sets = skills_container["auspraegungen"]
                 for level, skills in skill_sets.items():
                     for skill in skills:
-                        entry = skill+"|"+level+"|"+context
+                        entry = skill #+"|"+level+"|"+context
                         if entry in histogram:
                             histogram[entry] += 1
                         else:

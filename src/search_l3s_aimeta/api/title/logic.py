@@ -4,7 +4,8 @@ from requests.exceptions import JSONDecodeError
 import sys
 import unicodedata
 from pathlib import Path
-
+from flask import abort
+import tiktoken
 
 
 sys.path.append(os.getcwd())
@@ -60,20 +61,38 @@ class Title(Text_Preprocess,object):
 
         return text
     
+    @classmethod    
+    def num_tokens_from_text(self,text, encoding_name):
+        """Returns the number of tokens in a text string."""
+        encoding = tiktoken.encoding_for_model(encoding_name)
+        num_tokens = len(encoding.encode(text))
+        return num_tokens    
+    
     @classmethod
     def generate_title(self, id):
 
-        user_message = "Schlage für nachfolgende Lerneinheit drei motivierende Titel im JSON Format vor. Format: [<titel>, <titel>, ...]"
+        model_name = "gpt-3.5-turbo"
+
+        user_message = """Schlage für nachfolgende Lerneinheit drei motivierende Titel im JSON Format vor. Format: ["<titel>", "<titel>", ...]"""
  
 
         system_messages = "Sie sind ein hilfreicher Assistent, der motivierende Titel für eine bestimmte Lerneinheit erstellt."
 
-        text = Text_Preprocess.pre_process_task(id)   
+        text = Text_Preprocess.pre_process_task(id)['text']
+
+        total_tokens = self.num_tokens_from_text(text,model_name) + self.num_tokens_from_text(user_message,model_name) + self.num_tokens_from_text(system_messages,model_name)
+ 
 
         max_tokens = 4096
-        input_text = user_message + text['text']
-        if len(input_text.split()) > max_tokens:
-            input_text = ' '.join(input_text.split()[:max_tokens])
+
+        if total_tokens > max_tokens:
+            model_name = "gpt-3.5-turbo-16k"
+        elif total_tokens > 16000:
+            model_name = "gpt-4-32k"
+        elif total_tokens > 32000:
+            abort(400, "Input text is too long to handle. Please use shorter text.")    
+
+        input_text = user_message + text
 
 
         messages = [
@@ -81,14 +100,32 @@ class Title(Text_Preprocess,object):
             {"role": "user", "content": input_text}
         ]
 
-        response_text = self.generate_chat_completion(messages)
+        response_text = self.generate_chat_completion(messages=messages,model=model_name)
         
         response_text = self.preprocess_text(response_text)
 
 
+        if isinstance(response_text, list):
+            try: 
+                response = [f'"{item}"' for item in response_text]
+                return response_text
+            except:
+                abort(400, "Invalid response type. Please try Again.")    
+
+        elif isinstance(response_text, str):
+            try:
+                response = json.loads(response_text)
+                return response
+            except:
+                abort(400, 'Invalid response type. Please try Again.')   
+
+        else:
+            abort(400, 'Invalid response type. Please try Again.')   
+
+
+
 
         
-        return json.loads(response_text)
 
     
 

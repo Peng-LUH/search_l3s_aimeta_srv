@@ -187,6 +187,7 @@ statsmodels==0.13.5
 sympy==1.12
 termcolor==2.3.0
 threadpoolctl==3.2.0
+tiktoken==0.5.1
 tokenizers==0.13.2
 toml==0.10.2
 tomli==2.0.1
