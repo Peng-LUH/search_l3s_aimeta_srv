@@ -19,25 +19,26 @@ dto_trending_skills_request = Model("DtoTrendingSkillsRequest", {
     "radius": fields.Integer()
 })
 
+
+
 dto_jobs_search_response = Model("DtoJobsSearchResponse", {
     "job_offers": fields.List(fields.Raw(description="List of Dictionaries"))
 })
 
 
 dto_skills_response = Model("DtoSkillsResponse", {
-    "skills": fields.Raw(description="required skills with ranking")
+    "skills": fields.Raw(description="required skills with auspraegungen (skill level and skill name) and hierarchieName(context) for the given job.")
 })
 
-
-dto_skills = Model("DtoSkills", {
-    "hierarchieName" : fields.String(),
-    "auspraegungen": fields.Wildcard(fields.String)
-
-})
 
 
 dto_trending_skills_response = Model("DtoTrendingSkillsResponse", {
-    "trending_skills": fields.List(fields.List(fields.Raw()))
+    "topk": fields.String(description='number of top Trending Skills', example=5),
+    "trending_skills": fields.List(fields.String, description='List of Trending Skills', example=["Kundenberatung, -betreuung",
+    "Abrechnung",
+    "Kosten- und Leistungsrechnung",
+    "Akquisition",
+    "Korrespondenz"])
 })
 
 

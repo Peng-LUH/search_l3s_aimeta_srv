@@ -2,7 +2,7 @@ from http import HTTPStatus
 import json
 from flask_restx import Namespace, Resource
 import sys
-from flask import request
+from flask import request, abort
 from flask_cors import cross_origin
 
 
@@ -46,18 +46,17 @@ class SearchJobs(Resource):
             from search_l3s_aimeta.api.trends.logic import Trends
             trend = Trends()
 
-            jwt = trend.get_jwt()
+            try:
+                jwt = trend.get_jwt()
+            except:
+                  abort(501, "Connection to arbeitsagentur is not available.")    
+
+            assert "access_token" in jwt.keys(), abort(501, "Invalid Access token. Connection to arbeitsagentur is not available.")        
 
             results = trend.search(jwt["access_token"], job_name, loc,  radius)
 
-            # skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
-            # hist = trend.create_formal_skill_histogram(skills_compilation)
-            # sorted_kv_list = sorted(hist.items(), key=lambda x:x[1], reverse=True)
-            # print("<skill>|<skill_level>|<context> --> <frequency>")
-            # for t in sorted_kv_list:
-            #     print(t[0] +" --> "+ str(t[1]))
+            assert "stellenangebote" in results.keys(), abort(400,f"No job offers for job name: '{job_name}' at location: '{loc}'")
 
-        
             return {"job_offers": results['stellenangebote'] },  HTTPStatus.OK
 
 
@@ -65,7 +64,7 @@ class SearchJobs(Resource):
 
 @ns_trends.route("/skills/", endpoint="skills")
 class GetSkills(Resource):   
-    #@ns_trends.marshal_with(dto_skills_response)
+    @ns_trends.marshal_with(dto_skills_response)
     @ns_trends.doc(params={
         'loc': 'location',
         'job_name': 'name of the job',
@@ -80,14 +79,23 @@ class GetSkills(Resource):
             from search_l3s_aimeta.api.trends.logic import Trends
             trend = Trends()
 
-            jwt = trend.get_jwt()
+            try:
+                jwt = trend.get_jwt()
+            except:
+                  abort(501, "Connection to arbeitsagentur is not available.")    
+
+            assert "access_token" in jwt.keys(), abort(501, "Invalid Access token. Connection to arbeitsagentur is not available.")        
 
             results = trend.search(jwt["access_token"], job_name, loc, radius)
 
+            assert "stellenangebote" in results.keys(), abort(400,f"No job offers for job name: '{job_name}' at location: '{loc}'")
+
             skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
 
+            assert len(skills_compilation)>0, abort(400,f"No Skills for job name: '{job_name}' at location: '{loc}'")
+
         
-            return {"skill": skills_compilation},  HTTPStatus.OK
+            return {"skills": skills_compilation},  HTTPStatus.OK
     
 
 
@@ -96,35 +104,56 @@ class GetSkills(Resource):
 
 @ns_trends.route("/trending-skills/", endpoint="trending-skills")
 class GetTrends(Resource):   
-    #@ns_trends.marshal_with(dto_trending_skills_response)  
+    @ns_trends.marshal_with(dto_trending_skills_response)  
     @ns_trends.doc(params={
         'loc': 'location',
         'job_name': 'name of the job',
         'radius': 'radius to search for jobs',
+        'topk': 'top k trending skills'
     })
     def get(self):   
-            "trending skills"            
+            "get trending skills"            
             loc = request.args.get('loc')
             job_name = request.args.get('job_name')
             radius = request.args.get('radius')
+            topk = int(request.args.get('topk'))
+
 
             from search_l3s_aimeta.api.trends.logic import Trends
             trend = Trends()
 
-            jwt = trend.get_jwt()
+            try:
+                jwt = trend.get_jwt()
+            except:
+                  abort(501, "Connection to arbeitsagentur is not available.")    
+
+            assert "access_token" in jwt.keys(), abort(501, "Invalid Access token. Connection to arbeitsagentur is not available.")        
 
             results = trend.search(jwt["access_token"], job_name, loc, radius)
 
+            assert "stellenangebote" in results.keys(), abort(400,f"No job offers for job name: '{job_name}' at location: '{loc}'")
+
             skills_compilation = trend.formal_skills(jwt["access_token"], results["stellenangebote"])
+
+            assert len(skills_compilation)>0, abort(400,f"No Trending Skills for job name: '{job_name}' at location: '{loc}'")
+
+
             hist = trend.create_formal_skill_histogram(skills_compilation)
+
+            assert len(hist)>0, abort(400,f"No Trending Skills for job name: '{job_name}' at location: '{loc}'")
+
 
             sorted_kv_list = sorted(hist.items(), key=lambda x:x[1], reverse=True)
 
-            #print(sorted_kv_list)
+            if len(sorted_kv_list)>topk:
+                  sorted_kv_list = sorted_kv_list[:topk]
+            else:
+                  topk = len(sorted_kv_list)  
 
-            # for t in sorted_kv_list:
-            #     print(t[0] +" --> "+ str(t[1]))
+            top_k_trending_skills = []
 
-
+            for skill in sorted_kv_list:
+                  top_k_trending_skills.append(skill[0])
+            
         
-            return {"trending_skills": sorted_kv_list},  HTTPStatus.OK
+            return {"topk":topk, "trending_skills": top_k_trending_skills},  HTTPStatus.OK
