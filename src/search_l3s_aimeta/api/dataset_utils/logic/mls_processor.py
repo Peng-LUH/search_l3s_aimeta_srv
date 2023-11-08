@@ -1,6 +1,8 @@
 import os
 import json, requests
 from requests.exceptions import JSONDecodeError
+from flask import abort
+
 
 # LOGIN_PAYLOAD = {
 #   "client_id": os.getenv("MLS_CLIENT_ID"),
@@ -119,6 +121,9 @@ class MLSConnector(object):
         auth_header = self.__get_auth_header()
         taskstep_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/task-steps/" + object_id, headers=auth_header)
     
+
+        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", abort(400, "Invalid TaskStep ID.")
+
         return taskstep_response
 
     @classmethod
@@ -126,6 +131,8 @@ class MLSConnector(object):
         auth_header = self.__get_auth_header()
         task_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/tasks/" + object_id, headers=auth_header)
     
+        assert task_response.json()['@context'].split("/")[-1]!="Error", abort(400, "Invalid Task ID.")
+
         return task_response
     
     
@@ -193,15 +200,3 @@ class MLSCorpus(object):
         return f"Organization: {name}, Address: {streetno}, {zip}, {city}, {country}. "
     
     
-    # def __content_extractor(self, dict):
-        
-    #     for key, value in dict:
-    #         if "/mls-api" in value:
-    #             temp_response = MLSConnector.get_response(value)
-
-
-# mls_connect = MLSConnector()
-
-# auth_header = MLSConnector.get_dataset_response(dataset_name="task-steps", parameters=[{"task":'10'}])
-
-# print(auth_header)
