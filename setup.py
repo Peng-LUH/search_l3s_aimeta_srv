@@ -33,7 +33,8 @@ INSTALL_REQUIRES = [
     "pytest-flake8==1.1.0",
     "flake8==3.9.2",
     "black",
-    "bs4==0.0.1"
+    "bs4==0.0.1",
+    "tiktoken==0.5.1"
 ]
 EXTRAS_REQUIRE = {
     "dev": [

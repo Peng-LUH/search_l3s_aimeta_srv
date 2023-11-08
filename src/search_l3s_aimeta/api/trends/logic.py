@@ -119,39 +119,3 @@ class Trends(object):
         return histogram
 
 
-
-    
-
-
-
-
-        
-
-# aims = Trends()
-
-# job = "Elektrotechniker/in"
-# city = "Berlin"
-# radius = 30 #km
-# if len(sys.argv) == 3:
-#     job = sys.argv[1]
-#     city = sys.argv[2]
-
-
-# # Search for jobs
-# jwt = aims.get_jwt()
-# print(jwt)
-# print('#'*50)
-# results = aims.search(jwt["access_token"], job, city, radius)
-# print("result", results)
-# skills_compilation = aims.formal_skills(jwt["access_token"], results["stellenangebote"])
-# print('#'*100)
-#print(skills_compilation)
-# with open('skills.json', 'w', encoding='utf-8') as f:
-#     json.dump(skills_compilation, f, sort_keys=True, indent=2, ensure_ascii=False)
-
-
-# hist = aims.create_formal_skill_histogram(skills_compilation)
-# sorted_kv_list = sorted(hist.items(), key=lambda x:x[1], reverse=True)
-# print("<skill>|<skill_level>|<context> --> <frequency>")
-# for t in sorted_kv_list:
-#     print(t[0] +" --> "+ str(t[1]))
