@@ -2,6 +2,8 @@ from http import HTTPStatus
 import json
 from flask_restx import Namespace, Resource
 import sys
+from flask import abort
+
 
 sys.path.append('..')
 
@@ -24,7 +26,11 @@ class GetQuiz(Resource):
     def get(self, task_id):   
             "Generate a quiz of the Task"
             from search_l3s_aimeta.api.quiz.logic import Quiz
- 
+
+            try:
+                assert int(task_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+            except:
+                     abort(400, "Invalid type of task ID. Please try with valid task ID.") 
     
             mls_response = Quiz.generate_quiz(task_id)
         

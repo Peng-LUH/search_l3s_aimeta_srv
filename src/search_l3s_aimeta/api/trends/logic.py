@@ -7,6 +7,7 @@ import base64
 import base64
 import sys
 from pathlib import Path
+from flask import abort
 
 from urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -25,6 +26,8 @@ load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_ENDPOINT = os.getenv("API_ENDPOINT")
                    
+assert os.getenv("OPENAI_API_KEY") is not None, abort(501, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable.")
+assert os.getenv("API_ENDPOINT") is not None, abort(501, "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable.")
 
 
 class Trends(object):

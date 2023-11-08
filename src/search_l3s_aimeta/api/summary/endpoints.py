@@ -2,6 +2,8 @@ from http import HTTPStatus
 import json
 from flask_restx import Namespace, Resource
 import sys
+from flask import abort
+
 
 sys.path.append('..')
 
@@ -23,7 +25,11 @@ class GetSummary(Resource):
     def get(self, task_id):   
             "Retrieve a summary of the Task"
             from search_l3s_aimeta.api.summary.logic import Summary
-    
+
+            try:
+                assert int(task_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+            except:
+                     abort(400, "Invalid type of task ID. Please try with valid task ID.")    
             mls_response = Summary.generate_summary(task_id)
         
             return {"task_id":task_id,"summary": mls_response}, HTTPStatus.OK

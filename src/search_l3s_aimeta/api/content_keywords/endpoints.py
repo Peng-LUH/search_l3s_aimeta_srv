@@ -17,12 +17,19 @@ ns_content_keywords.models[dto_content_tags_response.name] = dto_content_tags_re
 
 
 
+
+
 @ns_content_keywords.route('/completions/<string:task_id>/content_tags', endpoint="aims_content_tags")
 class GetContentKeywords(Resource): 
     @ns_content_keywords.marshal_with(dto_content_tags_response)
-    def get(self, task_id):  
+    def get(self,task_id):  
             "Retrieve Content tags of the Task"
             from search_l3s_aimeta.api.content_keywords.logic import ContentKeywords
+
+            try:
+                assert int(task_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+            except:
+                     abort(400, "Invalid type of task ID. Please try with valid task ID.")
             
 
             mls_response = ContentKeywords.generate_content_keywords(task_id)

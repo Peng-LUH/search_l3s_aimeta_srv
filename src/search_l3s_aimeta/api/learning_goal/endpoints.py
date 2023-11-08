@@ -2,6 +2,8 @@ from http import HTTPStatus
 import json
 from flask_restx import Namespace, Resource
 import sys
+from flask import abort
+
 
 sys.path.append('..')
 
@@ -24,6 +26,10 @@ class GetLearningGoal(Resource):
             "Retrieve Learnng Goals of the Task"
             from search_l3s_aimeta.api.learning_goal.logic import LearningGoal
  
+            try:
+                assert int(task_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+            except:
+                     abort(400, "Invalid type of task ID. Please try with valid task ID.")
             mls_response = LearningGoal.generate_learning_goal(task_id)
         
             return {"task_id":task_id, "learning_goal":mls_response}, HTTPStatus.OK

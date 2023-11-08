@@ -2,6 +2,7 @@ from http import HTTPStatus
 import json
 from flask_restx import Namespace, Resource
 import sys
+from flask import abort
 
 from search_l3s_aimeta.api.dataset_utils.dto import (
     dataset_model,
@@ -26,6 +27,12 @@ class GetTaskSteps(Resource):
     #@ns_dataset_generator.expect(object_model)
     def get(self, task_id):     
         "Retrieve a Task resource"
+
+        try:
+            assert int(task_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+        except:
+            abort(400, "Invalid type of task ID. Please try with valid task ID.")     
+            
        
         mls_response = MLSConnector.get_task_response(task_id)
         mls_response_json = mls_response.json()
@@ -40,6 +47,13 @@ class GetTaskSteps(Resource):
     
     def get(self, taskstep_id):    
         "Retrieve a TaskStep Resource"
+
+
+        try:
+            assert int(taskstep_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+        except:
+            abort(400, "Invalid type of task ID. Please try with valid task ID.")     
+            
     
         mls_response = MLSConnector.get_task_steps_response(taskstep_id)
         mls_response_json = mls_response.json()

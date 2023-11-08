@@ -2,6 +2,7 @@ from http import HTTPStatus
 import json
 from flask_restx import Namespace, Resource
 import sys
+from flask import abort
 
 sys.path.append('..')
 
@@ -26,6 +27,12 @@ class GetTaskSteps(Resource):
     def get(self, taskstep_id):    
         "Retrieve a Preprocessed TaskStep Resource"
     
+
+        try:
+            assert int(taskstep_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+        except:
+            abort(400, "Invalid type of task ID. Please try with valid task ID.")     
+            
         mls_response = Text_Preprocess.pre_process_taskstep(taskstep_id)
         
         return mls_response, HTTPStatus.OK
@@ -37,6 +44,11 @@ class GetTaskSteps(Resource):
     @ns_dataset_preprocess.marshal_with(dto_task_preprocess_response)
     def get(self, task_id):    
         "Retrieve a Preprocessed TaskStep Resource"
+
+        try:
+            assert int(task_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
+        except:
+            abort(400, "Invalid type of task ID. Please try with valid task ID.")        
     
         mls_response = Text_Preprocess.pre_process_task(task_id)
         

@@ -58,7 +58,16 @@ class Text_Preprocess(object):
         base_url = os.getenv("MLS_BASE_URL")
         login_server_url = os.getenv("MLS_LOGIN_SERVER_URL")
         realm = os.getenv("MLS_REALM")
-        
+
+        assert os.getenv("MLS_BASE_URL") is not None, abort(501, "Environment variable 'MLS_BASE_URL' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_LOGIN_SERVER_URL") is not None, abort(501, "Environment variable 'MLS_LOGIN_SERVER_URL' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_REALM") is not None, abort(501, "Environment variable 'MLS_REALM' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_CLIENT_ID") is not None, abort(501, "Environment variable 'MLS_CLIENT_ID' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_CLIENT_SECRET") is not None, abort(501, "Environment variable 'MLS_CLIENT_SECRET' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_USERNAME") is not None, abort(501, "Environment variable 'MLS_USERNAME' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_USER_PASSWORD") is not None, abort(501, "Environment variable 'MLS_USER_PASSWORD' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_GRANT_TYPE") is not None, abort(501, "Environment variable 'MLS_GRANT_TYPE' is not defined. Please update/add env variable.")
+
         # get login response
         login_response = requests.post(login_server_url + "/realms/" + realm + "/protocol/openid-connect/token",
                 data = self.LOGIN_PAYLOAD,
