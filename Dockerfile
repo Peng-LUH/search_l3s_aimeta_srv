@@ -26,7 +26,7 @@ RUN pip install -r requirements.txt
 ENV FLASK_APP=run.py
 ENV FLASK_DEBUG=1
 ENV FLASK_ENV="development"
-ENV FLASK_RUN_PORT=9041
+ENV FLASK_RUN_PORT=5001
 
 ENV HOST_IP="localhost"
 ENV L3S_GATEWAY_PORT=9040
