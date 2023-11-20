@@ -28,6 +28,7 @@ from search_l3s_aimeta.api.context_keywords.endpoints import ns_context_keywords
 from search_l3s_aimeta.api.learning_goal.endpoints import ns_learning_goal
 from search_l3s_aimeta.api.quiz.endpoints import ns_quiz
 from search_l3s_aimeta.api.title.endpoints import ns_title
+from search_l3s_aimeta.api.taught_skills.endpoints import ns_taught_skills
 from search_l3s_aimeta.api.trends.endpoints import ns_trends
 
 
@@ -40,7 +41,9 @@ api.add_namespace(ns_context_keywords, path='/aims')
 api.add_namespace(ns_learning_goal, path='/aims')
 api.add_namespace(ns_quiz, path='/aims')
 api.add_namespace(ns_title, path='/aims')
+api.add_namespace(ns_taught_skills, path='/aims')
 api.add_namespace(ns_trends, path='/aims')
+
 
 
 
