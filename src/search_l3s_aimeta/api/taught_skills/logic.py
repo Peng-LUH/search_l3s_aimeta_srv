@@ -14,6 +14,21 @@ import tiktoken
 
 
 from search_l3s_aimeta.api.dataset_preprocess.logic import Text_Preprocess
+from search_l3s_aimeta.swagger_client import l3s_gateway_client
+
+
+## ------------ config: l3s_search_client --------------- ##
+sys.path.append('..')
+
+
+# from swagger_client import l3s_gateway_client
+l3s_gateway_config = l3s_gateway_client.Configuration()
+
+ 
+client_l3s_gateway = l3s_gateway_client.ApiClient(configuration=l3s_gateway_config)
+gateway_searcher_api = l3s_gateway_client.SearchServiceApi(api_client=client_l3s_gateway)
+# search_metadata_api = l3s_gateway_client.MetadataApi(api_client=client_l3s_gateway)
+ 
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -21,9 +36,12 @@ load_dotenv()
 
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_ENDPOINT = os.getenv("API_ENDPOINT")
+l3s_gateway_config.host = os.getenv('L3S_GATEWAY_HOST')
+
                    
 assert os.getenv("OPENAI_API_KEY") is not None, abort(501, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable.")
 assert os.getenv("API_ENDPOINT") is not None, abort(501, "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable.")
+assert os.getenv("L3S_GATEWAY_HOST") is not None, abort(501, "Environment variable 'L3S_GATEWAY_HOST' is not defined. Please update/add env variable.")
 
 
 
@@ -108,22 +126,55 @@ class TaughtSkills(Text_Preprocess,object):
         response_text = self.preprocess_text(response_text)
 
 
+
         if isinstance(response_text, list):
             try: 
                 response = [f'"{item}"' for item in response_text]
-                return response_text
+                list_response =  response
             except:
                 abort(400, "Invalid response type. Please try Again.")    
 
         elif isinstance(response_text, str):
             try:
                 response = json.loads(response_text)
-                return response
+                list_response = response
             except:
                 abort(400, 'Invalid response type. Please try Again.')   
 
         else:
             abort(400, 'Invalid response type. Please try Again.')   
+
+
+        assert type(list_response)==list, abort(400, "Invalid response. Please try again.")
+
+        assert len(list_response)>=1, abort(400, "No skills found. Please try again.")
+
+
+        existing_skills = []
+        new_skills = []
+
+        for skill in list_response:
+            response = gateway_searcher_api.get_search_service(owner= "1", user_id="1", query=skill, entity_type="skill", num_results=1)
+            assert len(response.results)<=1 
+            sim_score = response.results[0].similarity
+
+            if sim_score>=0.8:
+                ex_skill = response.results[0].entity_id
+                if ex_skill not in existing_skills:
+                    existing_skills.append(ex_skill)
+            else: 
+                new_skills.append(skill)    
+
+
+        result_dict = {"task_id": id, "new_skills":new_skills, "existing_skills": existing_skills}
+
+        return result_dict
+        
+
+
+
+
+
 
 
 
