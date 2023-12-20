@@ -18,6 +18,6 @@ quiz_item = Model('QuizItem', {
 
 dto_quiz_questions_response = Model("DtoQuizQuestionsResponse", {
     "task_id": fields.String(description='The task ID', example='10'),
-    "quiz": fields.Nested(quiz_item, description='Quiz questions categorized by taxonomy level')
+    "quiz_questions": fields.Nested(quiz_item, description='Quiz questions categorized by taxonomy level')
 
 })

@@ -34,7 +34,7 @@ class GetQuiz(Resource):
     
             mls_response = Quiz.generate_quiz(task_id)
         
-            return {"task_id": task_id, "quiz": mls_response}, HTTPStatus.OK
+            return {"task_id": task_id, "quiz_questions": mls_response}, HTTPStatus.OK
 
 
  

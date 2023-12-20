@@ -32,7 +32,7 @@ class GetLearningGoal(Resource):
                      abort(400, "Invalid type of task ID. Please try with valid task ID.")
             mls_response = LearningGoal.generate_learning_goal(task_id)
         
-            return {"task_id":task_id, "learning_goal":mls_response}, HTTPStatus.OK
+            return {"task_id":task_id, "learning_goals":mls_response}, HTTPStatus.OK
 
 
 
