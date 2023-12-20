@@ -11,7 +11,7 @@ dto_new_existing_skills_response = Model("DtoNewExistingSkillsResponse", {
                                                                           "Beobachtung und Reflexion",
                                                                           "Erfolgskontrolle"
                                                                         ]),
-    "existing_skills": fields.List(fields.String, description='List of existing taught skill ids for the learning task', example=[
+    "existing_skills": fields.List(fields.String, description='List of existing skills ids for the learning task', example=[
     "1",
     "2",
     "3"])                                                              
