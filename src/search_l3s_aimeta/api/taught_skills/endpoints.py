@@ -18,7 +18,7 @@ ns_taught_skills.models[dto_new_existing_skills_response.name] = dto_new_existin
 
 
 @ns_taught_skills.route("/completions/<string:task_id>/taught_skills", endpoint="aims-taught-skills")
-class GetTitle(Resource):     
+class GetTaughtSkills(Resource):     
     @ns_taught_skills.marshal_with(dto_new_existing_skills_response)
     def get(self, task_id):   
             "Extract new skills and existing skills from the given learning unit."

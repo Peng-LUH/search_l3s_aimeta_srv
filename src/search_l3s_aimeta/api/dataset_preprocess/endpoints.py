@@ -40,7 +40,7 @@ class GetTaskSteps(Resource):
 
 
 @ns_dataset_preprocess.route("/preprocess-tasks/<string:task_id>", endpoint="preprocess_tasks")
-class GetTaskSteps(Resource):
+class GetTask(Resource):
     @ns_dataset_preprocess.marshal_with(dto_task_preprocess_response)
     def get(self, task_id):    
         "Retrieve a Preprocessed TaskStep Resource"

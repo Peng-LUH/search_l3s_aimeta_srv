@@ -23,7 +23,7 @@ ns_dataset_generator.models[input_dataset_model.name] = input_dataset_model
     
 
 @ns_dataset_generator.route("/get-tasks/<string:task_id>", endpoint="get_tasks")
-class GetTaskSteps(Resource):
+class GetRawTask(Resource):
     #@ns_dataset_generator.expect(object_model)
     def get(self, task_id):     
         "Retrieve a Task resource"
@@ -42,7 +42,7 @@ class GetTaskSteps(Resource):
 
 
 @ns_dataset_generator.route("/get-tasksteps/<string:taskstep_id>", endpoint="get_tasksteps")
-class GetTaskSteps(Resource):
+class GetRawTaskSteps(Resource):
     #@ns_dataset_generator.expect(object_model)
     
     def get(self, taskstep_id):    
