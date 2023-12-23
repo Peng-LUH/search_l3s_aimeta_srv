@@ -20,29 +20,20 @@ from search_l3s_aimeta.swagger_client import l3s_gateway_client
 ## ------------ config: l3s_search_client --------------- ##
 sys.path.append('..')
 
-
-# from swagger_client import l3s_gateway_client
-l3s_gateway_config = l3s_gateway_client.Configuration()
-
- 
-client_l3s_gateway = l3s_gateway_client.ApiClient(configuration=l3s_gateway_config)
-gateway_searcher_api = l3s_gateway_client.SearchServiceApi(api_client=client_l3s_gateway)
-# search_metadata_api = l3s_gateway_client.MetadataApi(api_client=client_l3s_gateway)
- 
-
 from dotenv import load_dotenv
 load_dotenv()
 
-
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_ENDPOINT = os.getenv("API_ENDPOINT")
+
+
+# from swagger_client import l3s_gateway_client
+l3s_gateway_config = l3s_gateway_client.Configuration()
 l3s_gateway_config.host = os.getenv('L3S_GATEWAY_HOST')
 
-                   
-assert os.getenv("OPENAI_API_KEY") is not None, abort(501, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable.")
-assert os.getenv("API_ENDPOINT") is not None, abort(501, "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable.")
-assert os.getenv("L3S_GATEWAY_HOST") is not None, abort(501, "Environment variable 'L3S_GATEWAY_HOST' is not defined. Please update/add env variable.")
 
+# search_metadata_api = l3s_gateway_client.MetadataApi(api_client=client_l3s_gateway)
+ 
 
 
 class TaughtSkills(Text_Preprocess,object):
@@ -56,7 +47,9 @@ class TaughtSkills(Text_Preprocess,object):
             "Content-Type": "application/json",
             "Authorization": f"Bearer {API_KEY}",
         }
-
+        assert API_KEY is not None, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable."
+        assert API_ENDPOINT is not None,  "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable."
+            
         data = {
             "model": model,
             "messages": messages,
@@ -71,7 +64,7 @@ class TaughtSkills(Text_Preprocess,object):
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
         else:
-            raise Exception(f"Error {response.status_code}: {response.text}")
+            raise ValueError("Model did not generate output. Please try again with valid API_KEY and input data.")
 
 
 
@@ -82,6 +75,22 @@ class TaughtSkills(Text_Preprocess,object):
 
         return text
     
+    @classmethod
+    def post_process_text(self, text):
+        json_start = text.find('```json')
+        if json_start == -1:
+            raise ValueError(" The output can not be converted into json fomat. Please try again.")
+        else:
+            json_start += 7  
+            json_end = text.find('```', json_start)
+            if json_end == -1:
+                raise ValueError(" The output can not be converted into json fomat. Please try again.")
+            else:
+                json_content = text[json_start:json_end].strip()
+
+        print(json_content)
+        return json.loads(json_content)
+
     @classmethod    
     def num_tokens_from_text(self,text, encoding_name):
         """Returns the number of tokens in a text string."""
@@ -94,8 +103,9 @@ class TaughtSkills(Text_Preprocess,object):
 
         model_name = "gpt-3.5-turbo"
 
-        user_message = """Erzeugen von fünf Fähigkeiten im JSON-Format, Format: ["<Skill>", "<Skill>", ...,"<Skill>"]"""
+        #user_message = """Erzeugen von fünf Fähigkeiten im JSON-Format, Format: ["<Skill>", "<Skill>", ...,"<Skill>"]"""
  
+        user_message = """Extrahieren Sie maximal fünf Fertigkeiten (String foramt) aus der folgenden Lerneinheit im kommagetrennten Listenformat, Format: ["<Fähigkeit>", "<Fähigkeit>", ...]"""
 
         system_messages = "Sie sind ein helfender Assistent, der Fähigkeiten aus einem Lerninhalt generiert."
 
@@ -111,7 +121,7 @@ class TaughtSkills(Text_Preprocess,object):
         elif total_tokens > 16000:
             model_name = "gpt-4-32k"
         elif total_tokens > 32000:
-            abort(400, "Input text is too long to handle. Please use shorter text.")    
+            raise ValueError("Input text is too long to handle. Please use shorter text.")                    
 
         input_text = user_message + text
 
@@ -122,48 +132,47 @@ class TaughtSkills(Text_Preprocess,object):
         ]
 
         response_text = self.generate_chat_completion(messages=messages,model=model_name)
-        
         response_text = self.preprocess_text(response_text)
 
-
-
         if isinstance(response_text, list):
-            try: 
-                response = [f'"{item}"' for item in response_text]
-                list_response =  response
-            except:
-                abort(400, "Invalid response type. Please try Again.")    
-
-        elif isinstance(response_text, str):
-            try:
-                response = json.loads(response_text)
-                list_response = response
-            except:
-                abort(400, 'Invalid response type. Please try Again.')   
-
+            skills_list = [f'"{item}"' for item in response_text]
         else:
-            abort(400, 'Invalid response type. Please try Again.')   
+            try:
+                skills_list = json.loads(response_text)
+            except json.JSONDecodeError:
+                try:
+                    skills_list = self.post_process_text(response_text)
+                except  json.JSONDecodeError:
+                    raise ValueError('Invalid JSON response. Please try Again.')  
+                except ValueError as e:
+                    raise ValueError(f"Error in post-processing: {e}. Please try again.") 
+                                        
 
+        assert type(skills_list)==list, "Invalid response. Please try again."
+        assert len(skills_list)>=1, "No skills found. Please try again."
+        assert os.getenv("L3S_GATEWAY_HOST") is not None, "Environment variable 'L3S_GATEWAY_HOST' is not defined. Please update/add env variable."
 
-        assert type(list_response)==list, abort(400, "Invalid response. Please try again.")
-
-        assert len(list_response)>=1, abort(400, "No skills found. Please try again.")
-
+        client_l3s_gateway = l3s_gateway_client.ApiClient(configuration=l3s_gateway_config)
+        gateway_searcher_api = l3s_gateway_client.SearchServiceApi(api_client=client_l3s_gateway)
 
         existing_skills = []
         new_skills = []
 
-        for skill in list_response:
-            response = gateway_searcher_api.get_search_service(owner= "1", user_id="1", query=skill, entity_type="skill", num_results=1)
-            assert len(response.results)<=1 
-            sim_score = response.results[0].similarity
 
-            if sim_score>=0.8:
-                ex_skill = response.results[0].entity_id
-                if ex_skill not in existing_skills:
-                    existing_skills.append(ex_skill)
+        for skill in skills_list:
+            response = gateway_searcher_api.get_search_service(owner= "1", user_id="1", query=skill, entity_type="skill", num_results=1)            
+            if response.message == "success":
+                assert len(response.results)<=1, " Output results are not as expected."
+                sim_score = response.results[0].similarity
+
+                if sim_score>=0.8:
+                    ex_skill = response.results[0].entity_id
+                    if ex_skill not in existing_skills:
+                        existing_skills.append(ex_skill)
+                else: 
+                    new_skills.append(skill)    
             else: 
-                new_skills.append(skill)    
+                raise ValueError(f"Error found in Search api: {response.message}")   
 
 
         result_dict = {"task_id": id, "new_skills":new_skills, "existing_skills": existing_skills}

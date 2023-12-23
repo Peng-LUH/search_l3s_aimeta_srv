@@ -28,16 +28,18 @@ class GetRawTask(Resource):
     def get(self, task_id):     
         "Retrieve a Task resource"
 
-        try:
-            assert int(task_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
-        except:
-            abort(400, "Invalid type of task ID. Please try with valid task ID.")     
-            
-       
-        mls_response = MLSConnector.get_task_response(task_id)
-        mls_response_json = mls_response.json()
+        try:    
+            mls_response = MLSConnector.get_task_response(task_id)
+            mls_response_json = mls_response.json()
+            return mls_response_json, HTTPStatus.OK
         
-        return mls_response_json, HTTPStatus.OK
+        except ValueError as e:
+            return {"results": [], "message": e.args[0]}, HTTPStatus.INTERNAL_SERVER_ERROR
+        except FileExistsError as e:
+            return {"results": [], "message": e.args[0]}, HTTPStatus.NOT_FOUND
+        except AssertionError as e:
+                return {"results": [], "message": e.args[0]}, HTTPStatus.INTERNAL_SERVER_ERROR
+
     
 
 
@@ -47,15 +49,15 @@ class GetRawTaskSteps(Resource):
     
     def get(self, taskstep_id):    
         "Retrieve a TaskStep Resource"
-
-
-        try:
-            assert int(taskstep_id)>0, abort(400, "Invalid type of task ID. Please try with positive integer.")
-        except:
-            abort(400, "Invalid type of task ID. Please try with valid task ID.")     
             
-    
-        mls_response = MLSConnector.get_task_steps_response(taskstep_id)
-        mls_response_json = mls_response.json()
+        try: 
+            mls_response = MLSConnector.get_task_steps_response(taskstep_id)
+            mls_response_json = mls_response.json()
+            return mls_response_json, HTTPStatus.OK
         
-        return mls_response_json, HTTPStatus.OK
+        except ValueError as e:
+            return {"results": [], "message": e.args[0]}, HTTPStatus.INTERNAL_SERVER_ERROR
+        except FileExistsError as e:
+            return {"results": [], "message": e.args[0]}, HTTPStatus.NOT_FOUND
+        except AssertionError as e:
+                return {"results": [], "message": e.args[0]}, HTTPStatus.INTERNAL_SERVER_ERROR

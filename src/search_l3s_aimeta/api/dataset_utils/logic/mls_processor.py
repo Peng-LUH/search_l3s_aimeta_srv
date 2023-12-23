@@ -45,28 +45,25 @@ class MLSConnector(object):
         login_server_url = os.getenv("MLS_LOGIN_SERVER_URL")
         realm = os.getenv("MLS_REALM")
 
-        assert os.getenv("MLS_BASE_URL") is not None, abort(501, "Environment variable 'MLS_BASE_URL' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_LOGIN_SERVER_URL") is not None, abort(501, "Environment variable 'MLS_LOGIN_SERVER_URL' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_REALM") is not None, abort(501, "Environment variable 'MLS_REALM' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_CLIENT_ID") is not None, abort(501, "Environment variable 'MLS_CLIENT_ID' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_CLIENT_SECRET") is not None, abort(501, "Environment variable 'MLS_CLIENT_SECRET' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_USERNAME") is not None, abort(501, "Environment variable 'MLS_USERNAME' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_USER_PASSWORD") is not None, abort(501, "Environment variable 'MLS_USER_PASSWORD' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_GRANT_TYPE") is not None, abort(501, "Environment variable 'MLS_GRANT_TYPE' is not defined. Please update/add env variable.")
-
+        assert os.getenv("MLS_BASE_URL") is not None, "Environment variable 'MLS_BASE_URL' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_LOGIN_SERVER_URL") is not None, "Environment variable 'MLS_LOGIN_SERVER_URL' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_REALM") is not None, "Environment variable 'MLS_REALM' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_CLIENT_ID") is not None, "Environment variable 'MLS_CLIENT_ID' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_CLIENT_SECRET") is not None, "Environment variable 'MLS_CLIENT_SECRET' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_USERNAME") is not None, "Environment variable 'MLS_USERNAME' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_USER_PASSWORD") is not None,  "Environment variable 'MLS_USER_PASSWORD' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_GRANT_TYPE") is not None, "Environment variable 'MLS_GRANT_TYPE' is not defined. Please update/add env variable."
         
         # get login response
-        try:
-            login_response = requests.post(login_server_url + "/realms/" + realm + "/protocol/openid-connect/token",
-                data = self.LOGIN_PAYLOAD,
-                headers =  {
-                "Content-Type": "application/x-www-form-urlencoded",
-                # "Content-Type": "application/json",
-                }
-                )
-            
-        except:
-            abort(501, "Environment variables are not defined. Please update/add env variables.")        
+
+
+        login_response = requests.post(login_server_url + "/realms/" + realm + "/protocol/openid-connect/token",
+            data = self.LOGIN_PAYLOAD,
+            headers =  {
+            "Content-Type": "application/x-www-form-urlencoded",
+            # "Content-Type": "application/json",
+            })
+        
 
         # get access token
         access_token = login_response.json()["access_token"]
@@ -89,8 +86,6 @@ class MLSConnector(object):
         auth_header = self.__get_auth_header()
         base_url = os.getenv("MLS_BASE_URL")
     
-        assert base_url is not None, abort(501, "Environment variable 'base url' is not defined. Please update/add env variable.")
-
         if "/mls-api" in dataset_name:
             dataset_name_url = dataset_name
         else:
@@ -115,10 +110,8 @@ class MLSConnector(object):
     @classmethod
     def get_object_response(self, object_id):
         auth_header = self.__get_auth_header()
-        try:
-            base_url = os.getenv("MLS_BASE_URL")
-        except:
-            abort(501, "")    
+        
+        base_url = os.getenv("MLS_BASE_URL")
         
         url = base_url + object_id
         response = requests.get(url, headers=auth_header)
@@ -130,24 +123,30 @@ class MLSConnector(object):
     def get_task_steps_response(self, object_id):
         auth_header = self.__get_auth_header()
 
-        assert os.getenv("MLS_BASE_URL") is not None, abort(501, "Environment variable 'MLS_BASE_URL' is not defined. Please update/add env variable.")
+        try:
+            assert int(object_id)>0, "Invalid value of task ID. Please try with positive integer."
+        except  ValueError:
+            raise ValueError("Invalid format for task ID. Please provide a valid positive integer.")
 
         taskstep_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/task-steps/" + object_id, headers=auth_header)
     
-
-        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", abort(400, "Invalid TaskStep ID.")
-
+        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", "Invalid TaskStep ID. The taskstep ID does not exist."
+        
         return taskstep_response
 
     @classmethod
     def get_task_response(self, object_id):
         auth_header = self.__get_auth_header()
 
-        assert os.getenv("MLS_BASE_URL") is not None, abort(501, "Environment variable 'MLS_BASE_URL' is not Defined/Implemented. Please update/add env variable.")
+        try:
+            assert int(object_id)>0, "Invalid value of task ID. Please try with positive integer."
+        except  ValueError:
+            raise ValueError("Invalid format for task ID. Please provide a valid positive integer.")
 
         task_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/tasks/" + object_id, headers=auth_header)
     
-        assert task_response.json()['@context'].split("/")[-1]!="Error", abort(400, "Invalid Task ID.")
+        
+        assert task_response.json()['@context'].split("/")[-1]!="Error", "Invalid Task ID. The task ID does not exist."
 
         return task_response
     

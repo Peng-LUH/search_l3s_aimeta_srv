@@ -12,7 +12,7 @@ api_bp = Blueprint("api", __name__, url_prefix="/l3s-aimeta")
 
 
 api = Api(api_bp,
-          version="0.0.2",
+          version="0.0.3",
           title="L3S AI-Meta Service(AIMS) for SEARCH",
           description="Welcome to the Swagger UI documentation site!",
           # doc="/ui",
@@ -29,7 +29,7 @@ from search_l3s_aimeta.api.learning_goal.endpoints import ns_learning_goal
 from search_l3s_aimeta.api.quiz.endpoints import ns_quiz
 from search_l3s_aimeta.api.title.endpoints import ns_title
 from search_l3s_aimeta.api.taught_skills.endpoints import ns_taught_skills
-from search_l3s_aimeta.api.trends.endpoints import ns_trends
+# from search_l3s_aimeta.api.trends.endpoints import ns_trends
 
 
 api.add_namespace(ns_test, path="/aims")
@@ -42,7 +42,7 @@ api.add_namespace(ns_learning_goal, path='/aims')
 api.add_namespace(ns_quiz, path='/aims')
 api.add_namespace(ns_title, path='/aims')
 api.add_namespace(ns_taught_skills, path='/aims')
-api.add_namespace(ns_trends, path='/aims')
+# api.add_namespace(ns_trends, path='/aims')
 
 
 

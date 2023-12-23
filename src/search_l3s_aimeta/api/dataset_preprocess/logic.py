@@ -59,14 +59,14 @@ class Text_Preprocess(object):
         login_server_url = os.getenv("MLS_LOGIN_SERVER_URL")
         realm = os.getenv("MLS_REALM")
 
-        assert os.getenv("MLS_BASE_URL") is not None, abort(501, "Environment variable 'MLS_BASE_URL' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_LOGIN_SERVER_URL") is not None, abort(501, "Environment variable 'MLS_LOGIN_SERVER_URL' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_REALM") is not None, abort(501, "Environment variable 'MLS_REALM' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_CLIENT_ID") is not None, abort(501, "Environment variable 'MLS_CLIENT_ID' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_CLIENT_SECRET") is not None, abort(501, "Environment variable 'MLS_CLIENT_SECRET' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_USERNAME") is not None, abort(501, "Environment variable 'MLS_USERNAME' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_USER_PASSWORD") is not None, abort(501, "Environment variable 'MLS_USER_PASSWORD' is not defined. Please update/add env variable.")
-        assert os.getenv("MLS_GRANT_TYPE") is not None, abort(501, "Environment variable 'MLS_GRANT_TYPE' is not defined. Please update/add env variable.")
+        assert os.getenv("MLS_BASE_URL") is not None, "Environment variable 'MLS_BASE_URL' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_LOGIN_SERVER_URL") is not None, "Environment variable 'MLS_LOGIN_SERVER_URL' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_REALM") is not None, "Environment variable 'MLS_REALM' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_CLIENT_ID") is not None, "Environment variable 'MLS_CLIENT_ID' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_CLIENT_SECRET") is not None,  "Environment variable 'MLS_CLIENT_SECRET' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_USERNAME") is not None,  "Environment variable 'MLS_USERNAME' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_USER_PASSWORD") is not None,  "Environment variable 'MLS_USER_PASSWORD' is not defined. Please update/add env variable."
+        assert os.getenv("MLS_GRANT_TYPE") is not None,  "Environment variable 'MLS_GRANT_TYPE' is not defined. Please update/add env variable."
 
         # get login response
         login_response = requests.post(login_server_url + "/realms/" + realm + "/protocol/openid-connect/token",
@@ -91,8 +91,16 @@ class Text_Preprocess(object):
     @classmethod
     def get_taskstep_response(self, object_id):
         auth_header = self.__get_auth_header()
+
+        try: 
+            assert int(object_id)>0, "Invalid value of taskstep ID. Please try with a positive integer."
+        except ValueError:
+            raise ValueError(" This format of task step id is not accepted. Please provide the task ID in correct foramt.")            
+
         taskstep_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/task-steps/" + object_id, headers=auth_header)
     
+        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", "Invalid TaskStep ID. The taskstep ID does not exist."
+
         return taskstep_response
 
     @classmethod
@@ -107,7 +115,15 @@ class Text_Preprocess(object):
     @classmethod
     def get_task_response(self, object_id):
         auth_header = self.__get_auth_header()
+
+        try:           
+            assert int(object_id)>0, "Invalid value for task ID. Please try with a positive integer."
+        except ValueError:
+            raise ValueError(" This format of task id is not accepted. Please provide the task ID in correct foramt.")
+            
         task_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/tasks/" + object_id, headers=auth_header)
+        assert task_response.json()['@context'].split("/")[-1]!="Error", "Invalid Task ID. The task ID does not exist."
+
         return task_response
 
     @classmethod
@@ -120,7 +136,8 @@ class Text_Preprocess(object):
 
     @classmethod
     def read_a_taskstep(self, task_step):
-        assert 'id' in task_step.keys(), abort(400, "Invalid Task Step ID.")  
+        
+        assert 'id' in task_step.keys(), "Invalid Task Step ID."
 
         text = ' '  
         assert len(task_step['content'])>0, abort(400, "Task Step has no content to process.")  
@@ -143,7 +160,7 @@ class Text_Preprocess(object):
 
     @classmethod
     def read_a_task(self, task):
-        assert 'id' in task.keys(), abort(400, "Invalid Task ID.")  
+        assert 'id' in task.keys(), "Invalid Task ID."
             
         task_id = task["id"]
         task_title = task["title"]

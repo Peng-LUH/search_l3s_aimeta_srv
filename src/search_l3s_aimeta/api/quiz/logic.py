@@ -7,12 +7,6 @@ from pathlib import Path
 from flask import abort
 import tiktoken
 
-
-# sys.path.append(os.getcwd())
-# sys.path.append('..')
-# sys.path.append('.')
-
-
 from search_l3s_aimeta.api.dataset_preprocess.logic import Text_Preprocess
 
 from dotenv import load_dotenv
@@ -21,9 +15,6 @@ load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_ENDPOINT = os.getenv("API_ENDPOINT")
                    
-assert os.getenv("OPENAI_API_KEY") is not None, abort(501, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable.")
-assert os.getenv("API_ENDPOINT") is not None, abort(501, "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable.")
-
 
 class Quiz(Text_Preprocess,object):
 
@@ -37,6 +28,9 @@ class Quiz(Text_Preprocess,object):
             "Authorization": f"Bearer {API_KEY}",
         }
 
+        assert API_KEY is not None, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable."
+        assert API_ENDPOINT is not None,  "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable."
+            
         data = {
             "model": model,
             "messages": messages,
@@ -51,7 +45,7 @@ class Quiz(Text_Preprocess,object):
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
         else:
-            raise Exception(f"Error {response.status_code}: {response.text}")
+            raise ValueError("Model did not generate output. Please try again with valid API_KEY and input data.")
 
 
     @classmethod
@@ -60,6 +54,22 @@ class Quiz(Text_Preprocess,object):
         text = unicodedata.normalize("NFKD",text)
 
         return text
+    
+    @classmethod
+    def post_process_text(self, text):
+        json_start = text.find('```json')
+        if json_start == -1:
+            raise ValueError(" The output can not be converted into json fomat. Please try again.")
+        else:
+            json_start += 7  
+            json_end = text.find('```', json_start)
+            if json_end == -1:
+                raise ValueError(" The output can not be converted into json fomat. Please try again.")
+            else:
+                json_content = text[json_start:json_end].strip()
+
+        print(json_content)
+        return json.loads(json_content)
     
     @classmethod    
     def num_tokens_from_text(self,text, encoding_name):
@@ -82,8 +92,6 @@ class Quiz(Text_Preprocess,object):
 
         text = Text_Preprocess.pre_process_task(id)['text']
 
-
-
         max_tokens = 4096
 
         total_tokens = self.num_tokens_from_text(text,model_name) + self.num_tokens_from_text(user_message,model_name) + self.num_tokens_from_text(system_messages,model_name)
@@ -95,7 +103,7 @@ class Quiz(Text_Preprocess,object):
         elif total_tokens > 16000:
             model_name = "gpt-4-32k"
         elif total_tokens > 32000:
-            abort(400, "Input text is too long to handle. Please use shorter text.")                    
+            raise ValueError("Input text is too long to handle. Please use shorter text.")                    
 
 
         input_text = user_message + text
@@ -111,13 +119,16 @@ class Quiz(Text_Preprocess,object):
         response_text = self.preprocess_text(response_text)
 
         try:
-            response = json.loads(response_text)
-            return response
-        except:
-            abort(400, 'Invalid response type. Please try Again.')   
-        
+            quiz_questions = json.loads(response_text)
+        except json.JSONDecodeError:
+            try:
+                quiz_questions = self.post_process_text(response_text)
+            except  json.JSONDecodeError:
+                raise ValueError('Invalid JSON response. Please try Again.')  
+            except ValueError as e:
+                raise ValueError(f"Error in post-processing: {e}")         
 
-    
+        return {"task_id":id, "quiz_questions":quiz_questions} 
 
 
 

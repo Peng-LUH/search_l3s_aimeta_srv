@@ -21,9 +21,6 @@ load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_ENDPOINT = os.getenv("API_ENDPOINT")
 
-assert os.getenv("OPENAI_API_KEY") is not None, abort(501, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable.")
-assert os.getenv("API_ENDPOINT") is not None, abort(501, "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable.")
-
 
 
 class ContextKeywords(Text_Preprocess,object):
@@ -38,6 +35,9 @@ class ContextKeywords(Text_Preprocess,object):
             "Authorization": f"Bearer {API_KEY}",
         }
 
+        assert API_KEY is not None, "Environment variable 'OPENAI_API_KEY' is not defined. Please update/add env variable."
+        assert API_ENDPOINT is not None,  "Environment variable 'API_ENDPOINT' is not defined. Please update/add env variable."
+            
         data = {
             "model": model,
             "messages": messages,
@@ -52,7 +52,7 @@ class ContextKeywords(Text_Preprocess,object):
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
         else:
-            raise Exception(f"Error {response.status_code}: {response.text}")
+            raise ValueError("Model did not generate output. Please try again with valid API_KEY and input data.")
 
 
     @classmethod
@@ -95,7 +95,7 @@ class ContextKeywords(Text_Preprocess,object):
         elif total_tokens > 16000:
             model_name = "gpt-4-32k"
         elif total_tokens > 32000:
-            abort(400, "Input text is too long to handle. Please use shorter text.")   
+            raise ValueError("Input text is too long to handle. Please use shorter text.")                    
 
 
         input_text = user_message + text
@@ -109,22 +109,24 @@ class ContextKeywords(Text_Preprocess,object):
         response_text = self.generate_chat_completion(messages=messages,model=model_name)
         response_text = self.preprocess_text(response_text)
 
-        if isinstance(response_text, list):
-            try: 
-                response = [f'"{item}"' for item in response_text]
-                return response_text
-            except:
-                abort(400, "Invalid response type. Please try Again.")    
 
-        elif isinstance(response_text, str):
-            try:
-                response = json.loads(response_text)
-                return response
-            except:
-                abort(400, 'Invalid response type. Please try Again.')   
+        try: 
+            if isinstance(response_text, list):
+                context_tags = [f'"{item}"' for item in response_text]
+            elif isinstance(response_text, str):
+                try:
+                    context_tags = json.loads(response_text)
+                except json.JSONDecodeError:
+                    raise ValueError('Invalid JSON response. Please try Again.')  
+            else:
+                raise ValueError('Invalid response type. Please try Again.')   
 
-        else:
-            abort(400, 'Invalid response type. Please try Again.')   
+            return {"task_id":id, "context_tags":context_tags} 
+
+     
+        except ValueError:
+            raise ValueError('Invalid response type. Please try Again.')   
+
 
         
 
