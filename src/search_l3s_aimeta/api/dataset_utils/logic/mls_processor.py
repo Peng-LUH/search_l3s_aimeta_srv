@@ -11,8 +11,6 @@ load_dotenv()
 
 
 
-
-
 class MLSConnector(object):
     
     VALID_CONTENT_TYPE = {
@@ -124,13 +122,13 @@ class MLSConnector(object):
         auth_header = self.__get_auth_header()
 
         try:
-            assert int(object_id)>0, "Invalid value of task ID. Please try with positive integer."
+            assert int(object_id)>0, "Invalid value of taskstep ID. Please try with a positive integer."
         except  ValueError:
-            raise ValueError("Invalid format for task ID. Please provide a valid positive integer.")
+            raise ValueError("This format of taskstep id is not accepted. Please provide the task step ID in correct foramt.")
 
         taskstep_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/task-steps/" + object_id, headers=auth_header)
     
-        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", "Invalid TaskStep ID. The taskstep ID does not exist."
+        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", "Invalid taskstep ID. The taskstep ID does not exist."
         
         return taskstep_response
 

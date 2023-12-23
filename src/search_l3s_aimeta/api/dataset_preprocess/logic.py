@@ -95,11 +95,11 @@ class Text_Preprocess(object):
         try: 
             assert int(object_id)>0, "Invalid value of taskstep ID. Please try with a positive integer."
         except ValueError:
-            raise ValueError(" This format of task step id is not accepted. Please provide the task ID in correct foramt.")            
+            raise ValueError(" This format of task step id is not accepted. Please provide the task step ID in correct foramt.")            
 
         taskstep_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/task-steps/" + object_id, headers=auth_header)
     
-        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", "Invalid TaskStep ID. The taskstep ID does not exist."
+        assert taskstep_response.json()['@context'].split("/")[-1]!="Error", "Invalid taskstep ID. The taskstep ID does not exist."
 
         return taskstep_response
 
