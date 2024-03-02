@@ -122,7 +122,9 @@ class Text_Preprocess(object):
             raise ValueError(" This format of task id is not accepted. Please provide the task ID in correct foramt.")
             
         task_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/tasks/" + object_id, headers=auth_header)
-        assert task_response.json()['@context'].split("/")[-1]!="Error", "Invalid Task ID. The task ID does not exist."
+
+
+        assert task_response.json()['@context'].split("/")[-1]!="Error", "Invalid Task ID. The task ID does not exist in MLS."
 
         return task_response
 
@@ -140,8 +142,9 @@ class Text_Preprocess(object):
         assert 'id' in task_step.keys(), "Invalid Task Step ID."
 
         text = ' '  
-        assert len(task_step['content'])>0, abort(400, "Task Step has no content to process.")  
-
+        if not len(task_step['content'])>0:
+            return text
+        
         for i in range(len(task_step['content'])):
             if task_step["content"][i]['type']==1:
                 task_step_html = task_step['content'][i]['value']

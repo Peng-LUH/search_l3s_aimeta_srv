@@ -144,7 +144,7 @@ class MLSConnector(object):
         task_response = requests.get(os.getenv("MLS_BASE_URL") + "/mls-api/tasks/" + object_id, headers=auth_header)
     
         
-        assert task_response.json()['@context'].split("/")[-1]!="Error", "Invalid Task ID. The task ID does not exist."
+        assert task_response.json()['@context'].split("/")[-1]!="Error", "Invalid Task ID. The task ID does not exist in MLS."
 
         return task_response
     
