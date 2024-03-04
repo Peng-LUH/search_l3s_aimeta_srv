@@ -12,7 +12,7 @@ api_bp = Blueprint("api", __name__, url_prefix="/l3s-aimeta")
 
 
 api = Api(api_bp,
-          version="0.0.3",
+          version="0.0.4",
           title="L3S AI-Meta Service(AIMS) for SEARCH",
           description="Welcome to the Swagger UI documentation site!",
           # doc="/ui",
