@@ -12,7 +12,7 @@ The metdata can be title, keywords, quiz and so on.
 > flask run
 
 
-### Folder Structue 
+### Folder Structure
 
 ```plaintext
 
