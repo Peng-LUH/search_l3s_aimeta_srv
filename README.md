@@ -1,5 +1,8 @@
 # search_l3s_aimeta_srv
 
+AIMS (AI meta service) api helps a content creator by generating metadata for his/her learning content on the MLS platform. 
+The metdata can be title, keywords, quiz and so on. 
+
 ### To install the package
 > pip install --upgrade pip setuptools wheels
 > pip install -r requirements.txt
